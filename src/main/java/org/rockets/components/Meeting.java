@@ -12,7 +12,7 @@ public class Meeting {
     private List<UUID> attachmentIds;
 
     public Meeting(UUID meetingId, String title, String dateTime, String location, String details,
-            List<UUID> calendarIds, List<UUID> participantIds, List<UUID> attachmentIds) {
+                   List<UUID> calendarIds, List<UUID> participantIds, List<UUID> attachmentIds) {
         this.meetingId = meetingId;
         this.title = title;
         this.dateTime = dateTime;

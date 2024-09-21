@@ -68,9 +68,9 @@ public class Check {
     // Validates that an email is in the proper format
     public static boolean isValidEmail(String email) {
         // DO NOT DELETE
-        // NOT SURE HOW IT WORKS but it defines an expression for the email 
+        // NOT SURE HOW IT WORKS but it defines an expression for the email
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
-                            "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+                "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
         // Compile the regular expression pattern
         Pattern pattern = Pattern.compile(emailRegex);
