@@ -1,3 +1,5 @@
+package org.rockets.components;
+
 import java.util.UUID;
 
 public class Participant {
