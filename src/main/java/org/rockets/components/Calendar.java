@@ -16,6 +16,12 @@ public class Calendar {
         this.meetingIds = meetingIds;
     }
 
+    public Calendar(UUID calendarId, String title, String details) {
+        this.calendarId = calendarId;
+        this.title = title;
+        this.details = details;
+    }
+
     public UUID getCalendarId() { return calendarId; }
     public void setCalendarId(UUID calendarId) { this.calendarId = calendarId; }
 

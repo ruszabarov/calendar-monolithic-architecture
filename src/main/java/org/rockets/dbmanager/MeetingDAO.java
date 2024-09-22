@@ -1,5 +1,5 @@
 package org.rockets.dbmanager;
-import org.rockets.components.*;
+import org.rockets.components.Meeting;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MeetingDAO {
-    private Connection conn;
+    private final Connection conn;
 
     public MeetingDAO(String dbUrl) throws SQLException, ClassNotFoundException {
         // Load the SQLite JDBC driver
