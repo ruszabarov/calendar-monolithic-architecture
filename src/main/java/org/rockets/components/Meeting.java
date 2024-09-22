@@ -25,6 +25,14 @@ public class Meeting {
         this.attachmentIds = attachmentIds;
     }
 
+    public Meeting(UUID meetingId, String title, String dateTime, String location, String details) {
+        this.meetingId = meetingId;
+        this.title = title;
+        this.dateTime = dateTime;
+        this.location = location;
+        this.details = details;
+    }
+
     public UUID getMeetingId() {
         return meetingId;
     }
