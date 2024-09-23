@@ -2,6 +2,7 @@ package org.rockets.components;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 public class Calendar {
     private UUID calendarId;
@@ -13,13 +14,11 @@ public class Calendar {
         this.calendarId = calendarId;
         this.title = title;
         this.details = details;
-        this.meetingIds = meetingIds;
+        this.meetingIds = meetingIds != null ? new ArrayList<>(meetingIds) : new ArrayList<>();
     }
 
     public Calendar(UUID calendarId, String title, String details) {
-        this.calendarId = calendarId;
-        this.title = title;
-        this.details = details;
+        this(calendarId, title, details, null);
     }
 
     public UUID getCalendarId() { return calendarId; }
@@ -31,6 +30,20 @@ public class Calendar {
     public String getDetails() { return details; }
     public void setDetails(String details) { this.details = details; }
 
-    public List<UUID> getMeetingIds() { return meetingIds; }
-    public void setMeetingIds(List<UUID> meetingIds) { this.meetingIds = meetingIds; }
+    public List<UUID> getMeetingIds() { return new ArrayList<>(meetingIds); }
+    public void setMeetingIds(List<UUID> meetingIds) {
+        this.meetingIds = meetingIds != null ? new ArrayList<>(meetingIds) : new ArrayList<>();
+    }
+
+    public void addMeetingId(UUID meetingId) {
+        if (meetingId != null && !meetingIds.contains(meetingId)) {
+            meetingIds.add(meetingId);
+        }
+    }
+
+    public void removeMeetingId(UUID meetingId) {
+        if (meetingId != null) {
+            meetingIds.remove(meetingId);
+        }
+    }
 }

@@ -7,7 +7,13 @@ import java.sql.*;
 
 public class Application {
     public static void main(String[] args) {
+        CommandLineParser parser = new CommandLineParser();
+        CommandLine commandLine = new CommandLine(parser);
+
+        int exitCode = commandLine.execute(args);
         test();
+
+        System.exit(exitCode);
     }
 
     public static void test() {
