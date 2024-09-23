@@ -9,9 +9,7 @@ public class MeetingDAO {
     private final Connection conn;
 
     public MeetingDAO(String dbUrl) throws SQLException, ClassNotFoundException {
-        // Load the SQLite JDBC driver
         Class.forName("org.sqlite.JDBC");
-        // Initialize the database connection
         conn = DriverManager.getConnection(dbUrl);
     }
 

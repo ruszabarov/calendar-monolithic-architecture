@@ -44,4 +44,12 @@ public class MeetingController {
 
         return meeting;
     }
+
+    public void deleteMeeting(Meeting meeting) {
+        try {
+            meetingDAO.deleteMeeting(meeting.getMeetingId().toString());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
 }
