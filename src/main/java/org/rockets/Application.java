@@ -2,6 +2,7 @@ package org.rockets;
 
 import org.rockets.cli.parser.CommandLineParser;
 import picocli.CommandLine;
+import java.io.File;
 
 import java.sql.*;
 
@@ -22,6 +23,11 @@ public class Application {
             // Database parameters
             String url = "jdbc:sqlite:calendar.db"; // Replace with your database file path
             // Create a connection to the database
+            File dbFile = new File("calendar.db");
+            if (!dbFile.exists()) {
+                System.out.println("File doesn't exist");
+                return;
+            }
             connection = DriverManager.getConnection(url);
 
             System.out.println("Connection to SQLite has been established.");

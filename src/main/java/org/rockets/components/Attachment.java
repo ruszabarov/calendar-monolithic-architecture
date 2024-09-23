@@ -7,7 +7,7 @@ public class Attachment {
     private UUID attachmentId;
     private String attachmentUrl;
 
-    public Attachment(UUID attachmentId, UUID meetingId, String attachmentUrl) {
+    public Attachment(UUID attachmentId, String attachmentUrl) {
         this.attachmentId = attachmentId;
         this.attachmentUrl = attachmentUrl;
     }
