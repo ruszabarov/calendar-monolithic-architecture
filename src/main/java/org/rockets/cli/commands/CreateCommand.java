@@ -2,6 +2,7 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
+import org.rockets.controller.CalendarController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -102,11 +103,10 @@ public class CreateCommand implements Runnable {
         @Override
         public void run() {
             // TODO: Add validations from Check.java
-            // TODO: Add a meeting to a new calendar (no orphans)
             try {
                 Calendar calendar = new Calendar(calendarId, title, details, meetingIds);
-                CalendarDAO calendarDAO = new CalendarDAO("jdbc:sqlite:calendar.db");
-                calendarDAO.createCalendar(calendar);
+                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
+                calendarController.createCalendarWithMeetingIds(calendar);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
