@@ -102,6 +102,7 @@ public class CreateCommand implements Runnable {
         @Override
         public void run() {
             // TODO: Add validations from Check.java
+            // TODO: Add a meeting to a new calendar (no orphans)
             try {
                 Calendar calendar = new Calendar(calendarId, title, details, meetingIds);
                 CalendarDAO calendarDAO = new CalendarDAO("jdbc:sqlite:calendar.db");
