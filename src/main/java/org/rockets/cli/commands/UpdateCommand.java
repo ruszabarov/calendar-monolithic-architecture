@@ -2,8 +2,8 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
+import org.rockets.controller.CalendarController;
 import org.rockets.controller.MeetingController;
-import org.rockets.dbmanager.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -120,24 +120,16 @@ public class UpdateCommand implements Runnable {
             // TODO: Add validations from Check.java
             // Check at least one option is provided
             try {
-                CalendarDAO calendarDAO = new CalendarDAO("jdbc:sqlite:calendar.db");
-                Calendar calendar = calendarDAO.getCalendarById(id);
-
                 // Check if at least one update option is specified
                 if (title == null && details == null && addMeetingId == null && removeMeetingId == null) {
                     logger.error("At least one update option must be specified.");
                     return;
                 }
 
-                // Apply updates to the calendar
-                if (title != null) calendar.setTitle(title);
-                if (details != null) calendar.setDetails(details);
-                if (addMeetingId != null) calendar.addMeetingId(addMeetingId);
-                if (removeMeetingId != null) calendar.removeMeetingId(removeMeetingId);
+                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
+                Calendar calendar = new Calendar(UUID.fromString(id), title, details);
 
-                // Update the calendar in the database
-                // TODO: Refactor to either work with DAO functions or just update DAO functions to work with this
-                // calendarDAO.updateCalendar(calendar);
+                calendarController.updateCalendar(calendar);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
