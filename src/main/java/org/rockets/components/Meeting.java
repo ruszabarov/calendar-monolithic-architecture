@@ -1,6 +1,7 @@
 package org.rockets.components;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Meeting {
@@ -9,24 +10,15 @@ public class Meeting {
     private String dateTime;
     private String location;
     private String details;
-    private List<UUID> calendarIds;
-    private List<UUID> participantIds;
-    private List<UUID> attachmentIds;
+    private List<Participant> participants;
+    private List<Attachment> attachments;
 
-    public Meeting(UUID meetingId, String title, String dateTime, String location, String details,
-                   List<UUID> calendarIds, List<UUID> participantIds, List<UUID> attachmentIds) {
-        this.meetingId = meetingId;
-        this.title = title;
-        this.dateTime = dateTime;
-        this.location = location;
-        this.details = details;
-        this.calendarIds = calendarIds;
-        this.participantIds = participantIds;
-        this.attachmentIds = attachmentIds;
+    public Meeting(UUID uuid) {
+        this.meetingId = uuid;
     }
 
     public Meeting(UUID meetingId, String title, String dateTime, String location, String details) {
-        this.meetingId = meetingId;
+        this(meetingId);
         this.title = title;
         this.dateTime = dateTime;
         this.location = location;
@@ -73,63 +65,57 @@ public class Meeting {
         this.details = details;
     }
 
-    public List<UUID> getCalendarIds() {
-        return calendarIds;
+    public List<Participant> getParticipants() {
+        return participants;
     }
 
-    public void setCalendarIds(List<UUID> calendarIds) {
-        this.calendarIds = calendarIds;
+    public void setParticipantIds(List<Participant> participants) {
+        this.participants = participants;
     }
 
-    public List<UUID> getParticipantIds() {
-        return participantIds;
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
-    public void setParticipantIds(List<UUID> participantIds) {
-        this.participantIds = participantIds;
-    }
-
-    public List<UUID> getAttachmentIds() {
-        return attachmentIds;
-    }
-
-    public void setAttachmentIds(List<UUID> attachmentIds) {
-        this.attachmentIds = attachmentIds;
-    }
-
-    // Adds CalendarId
-    public void addCalendarId(UUID calendarId) {
-        if (!calendarIds.contains(calendarId)) {
-            calendarIds.add(calendarId);
-        }
-    }
-
-    // Removes CalendarId
-    public void removeCalendarId(UUID calendarId) {
-        calendarIds.remove(calendarId);
+    public void setAttachmentIds(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     // Adds ParticipantID
-    public void addParticipantId(UUID participantId) {
-        if (!participantIds.contains(participantId)) {
-            participantIds.add(participantId);
+    public void addParticipant(Participant participant) {
+        if (participant.getParticipantId() != null && !participants.contains(participant)) {
+            participants.add(participant);
         }
     }
 
     // Removes ParticipantID
-    public void removeParticipantId(UUID participantId) {
-        participantIds.remove(participantId);
+    public void removeParticipant(Participant participant) {
+        participants.remove(participant);
     }
 
     // Adds AttachmentId
-    public void addAttachmentId(UUID attachmentId) {
-        if (!attachmentIds.contains(attachmentId)) {
-            attachmentIds.add(attachmentId);
+    public void addAttachment(Attachment attachment) {
+        if (!attachments.contains(attachment)) {
+            attachments.add(attachment);
         }
     }
 
     // Removes AttachmentId
-    public void removeAttachmentId(UUID attachmentId) {
-        attachmentIds.remove(attachmentId);
+    public void removeAttachment(Attachment attachment) {
+        attachments.remove(attachment);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Meeting meeting = (Meeting) o;
+        return Objects.equals(meetingId, meeting.meetingId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(meetingId);
+    }
+
 }

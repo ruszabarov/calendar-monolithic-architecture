@@ -69,7 +69,7 @@ public class CreateCommand implements Runnable {
         public void run() {
             // TODO: Add validations from Check.java
             try {
-                Meeting meeting = new Meeting(meetingId, title, dateTime, location, details, calendarIds, participantIds, attachmentIds);
+                Meeting meeting = new Meeting(meetingId, title, dateTime, location, details);
                 MeetingDAO mtgDAO = new MeetingDAO("jdbc:sqlite:calendar.db");
                 mtgDAO.createMeeting(meeting);
             } catch (Exception e) {
@@ -98,15 +98,15 @@ public class CreateCommand implements Runnable {
         private String details;
 
         @Option(names = "--meetingIds", description = "List of meeting IDs associated with the calendar", split = ",")
-        private List<UUID> meetingIds;
+        private List<String> meetingIds;
 
         @Override
         public void run() {
             // TODO: Add validations from Check.java
             try {
-                Calendar calendar = new Calendar(calendarId, title, details, meetingIds);
+                Calendar calendar = new Calendar(calendarId, title, details);
                 CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
-                calendarController.createCalendarWithMeetingIds(calendar);
+                calendarController.createCalendarWithMeetingIds(calendar, meetingIds);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -138,7 +138,7 @@ public class CreateCommand implements Runnable {
             // TODO: Add validations from Check.java
             try {
                 // TODO: Uncomment when ParticipantDAO is implemented
-                Participant participant = new Participant(participantId, meetingId, name, email);
+                Participant participant = new Participant(participantId, name, email);
                 //ParticipantDAO participantDAO = new ParticipantDAO("jdbc:sqlite:calendar.db");
                 //participantDAO.createParticipant(participant);
             } catch (Exception e) {

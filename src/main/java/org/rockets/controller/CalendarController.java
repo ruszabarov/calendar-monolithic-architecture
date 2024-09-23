@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public class CalendarController {
     CalendarDAO calendarDAO;
+    MeetingDAO meetingDAO;
 
     public CalendarController(String dbUrl) {
         try {
@@ -22,14 +23,40 @@ public class CalendarController {
         }
     }
 
-    public void createCalendarWithMeetingIds(Calendar calendar) {
+    public void createCalendarWithMeetingIds(Calendar calendar, List<String> meetingIds) {
         try {
             calendarDAO.createCalendar(calendar);
-            for (UUID meetingId : calendar.getMeetingIds()) {
-                calendarDAO.addMeetingToCalendar(calendar.getCalendarId().toString(), meetingId.toString());
+            for (String meetingId : meetingIds) {
+
+                Meeting meeting = meetingDAO.getMeetingById(meetingId);
+
+                if (meeting != null) {
+                    calendarDAO.addMeetingToCalendar(calendar.getCalendarId().toString(), meetingId);
+                } else {
+                    System.err.println("Meeting with id " + meetingId + " does not exist!");
+                }
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+        }
+    }
+
+    public Calendar getCalendarById(UUID id) {
+        try {
+            return calendarDAO.getCalendarById(id.toString());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public Calendar updateCalendar(Calendar calendar) {
+        try {
+            calendarDAO.updateCalendar(calendar);
+            return calendarDAO.getCalendarById(calendar.getCalendarId().toString());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

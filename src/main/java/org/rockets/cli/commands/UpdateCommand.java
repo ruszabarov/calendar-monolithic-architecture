@@ -2,6 +2,7 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
+import org.rockets.controller.MeetingController;
 import org.rockets.dbmanager.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,23 +83,13 @@ public class UpdateCommand implements Runnable {
                 logger.error("At least one update option must be specified.");
                 return;
             }
-            try {
-                MeetingDAO mtgDAO = new MeetingDAO("jdbc:sqlite:calendar.db");
-                Meeting meeting = mtgDAO.getMeetingById(id);
-                if (title != null) meeting.setTitle(title);
-                if (dateTime != null) meeting.setDateTime(dateTime);
-                if (location != null) meeting.setLocation(location);
-                if (details != null) meeting.setDetails(details);
-                if (addCalendarId != null) meeting.addCalendarId(addCalendarId);
-                if (removeCalendarId != null) meeting.removeCalendarId(removeCalendarId);
-                if (addParticipantId != null) meeting.addParticipantId(addParticipantId);
-                if (removeParticipantId != null) meeting.removeParticipantId(removeParticipantId);
-                if (addAttachmentId != null) meeting.addAttachmentId(addAttachmentId);
-                if (removeAttachmentId != null) meeting.removeAttachmentId(removeAttachmentId);
-                mtgDAO.updateMeeting(meeting);
-            } catch (Exception e) {
-                System.err.println("An error occurred: " + e.getMessage());
-            }
+
+            MeetingController meetingController = new MeetingController("jdbc:sqlite:calendar.db");
+
+            Meeting meeting = new Meeting(UUID.fromString(id), title, dateTime, location, details);
+
+            meetingController.updateMeeting(meeting);
+
             logger.info("Updating meeting with ID = " + id);
             // Implement update logic here
         }

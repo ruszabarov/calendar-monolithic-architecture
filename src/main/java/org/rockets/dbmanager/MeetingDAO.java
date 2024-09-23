@@ -42,6 +42,26 @@ public class MeetingDAO {
         return meetings;
     }
 
+    // Read meetings by calendar id
+    public List<Meeting> getMeetingsByCalendarId(String calendarId) throws SQLException {
+        String sql = "SELECT Meetings.* FROM Meetings JOIN MeetingCalendar ON Meetings.MeetingId = MeetingCalendar.MeetingId WHERE MeetingCalendar.calendarId = ?";
+
+        List<Meeting> meetings = new ArrayList<>();
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, calendarId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Meeting meeting = new Meeting(UUID.fromString(rs.getString("Meetings.MeetingId")), rs.getString("Meetings.Title"), rs.getString("Meetings.DateTime"), rs.getString("Meetings.Location"), rs.getString("Meetings.Details"));
+                    meetings.add(meeting);
+                }
+            }
+        }
+
+        return meetings;
+    }
+
     // Read a specific meeting
     public Meeting getMeetingById(String meetingId) throws SQLException {
         String sql = "SELECT * FROM Meetings WHERE MeetingId = ?;";

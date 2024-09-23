@@ -1,6 +1,7 @@
 package org.rockets.dbmanager;
 
 import org.rockets.components.Calendar;
+import org.rockets.components.Meeting;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -57,12 +58,12 @@ public class CalendarDAO {
         }
     }
 
-    public void updateCalendar(String calendarId, String title, String details) throws SQLException {
+    public void updateCalendar(Calendar calendar) throws SQLException {
         String sql = "UPDATE Calendars SET Title = ?, Details = ? WHERE CalendarId = ?;";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, title);
-            pstmt.setString(2, details);
-            pstmt.setString(3, calendarId);
+            pstmt.setString(1, calendar.getTitle());
+            pstmt.setString(2, calendar.getDetails());
+            pstmt.setString(3, calendar.getCalendarId().toString());
             pstmt.executeUpdate();
         }
     }

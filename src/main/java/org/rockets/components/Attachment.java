@@ -1,5 +1,6 @@
 package org.rockets.components;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Attachment {
@@ -21,4 +22,17 @@ public class Attachment {
 
     public String getAttachmentUrl() { return attachmentUrl; }
     public void setAttachmentUrl(String attachmentUrl) { this.attachmentUrl = attachmentUrl; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Attachment attachment = (Attachment) o;
+        return Objects.equals(attachmentId, attachment.getAttachmentId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(attachmentId);
+    }
 }

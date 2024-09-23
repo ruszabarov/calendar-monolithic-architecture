@@ -3,22 +3,18 @@ package org.rockets.components;
 import java.util.List;
 import java.util.UUID;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Calendar {
     private UUID calendarId;
     private String title;
     private String details;
-    private List<UUID> meetingIds;
+    private List<Meeting> meetings;
 
-    public Calendar(UUID calendarId, String title, String details, List<UUID> meetingIds) {
+    public Calendar(UUID calendarId, String title, String details) {
         this.calendarId = calendarId;
         this.title = title;
         this.details = details;
-        this.meetingIds = meetingIds != null ? new ArrayList<>(meetingIds) : new ArrayList<>();
-    }
-
-    public Calendar(UUID calendarId, String title, String details) {
-        this(calendarId, title, details, null);
     }
 
     public UUID getCalendarId() { return calendarId; }
@@ -30,20 +26,22 @@ public class Calendar {
     public String getDetails() { return details; }
     public void setDetails(String details) { this.details = details; }
 
-    public List<UUID> getMeetingIds() { return new ArrayList<>(meetingIds); }
-    public void setMeetingIds(List<UUID> meetingIds) {
-        this.meetingIds = meetingIds != null ? new ArrayList<>(meetingIds) : new ArrayList<>();
+    public List<Meeting> getMeetings() {
+        return this.meetings;
+    }
+    public void setMeetings(List<Meeting> meetings) {
+        this.meetings = meetings;
     }
 
-    public void addMeetingId(UUID meetingId) {
-        if (meetingId != null && !meetingIds.contains(meetingId)) {
-            meetingIds.add(meetingId);
+    public void addMeeting(Meeting meeting) {
+        if (meeting.getMeetingId() != null && !meetings.contains(meeting)) {
+            meetings.add(meeting);
         }
     }
 
-    public void removeMeetingId(UUID meetingId) {
-        if (meetingId != null) {
-            meetingIds.remove(meetingId);
+    public void removeMeeting(Meeting meeting) {
+        if (meeting != null) {
+            meetings.remove(meeting);
         }
     }
 }

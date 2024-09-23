@@ -28,7 +28,20 @@ public class MeetingController {
         try {
             return meetingDAO.getMeetingById(id);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
         }
+
+        return null;
+    }
+
+    public Meeting updateMeeting(Meeting meeting) {
+        try {
+            meetingDAO.updateMeeting(meeting);
+            return meetingDAO.getMeetingById(meeting.getMeetingId().toString());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return meeting;
     }
 }
