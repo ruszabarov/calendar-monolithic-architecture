@@ -8,6 +8,8 @@ import org.rockets.dbmanager.MeetingDAO;
 import org.rockets.dbmanager.ParticipantDAO;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MeetingController {
@@ -52,6 +54,16 @@ public class MeetingController {
         }
 
         return null;
+    }
+
+    public List<Meeting> getAllMeetings() {
+        try {
+            return meetingDAO.getAllMeetings();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return Collections.emptyList();
     }
 
     public Meeting updateMeeting(Meeting meeting) {
@@ -109,12 +121,6 @@ public class MeetingController {
             }
 
             meetingDAO.removeParticipantFromMeeting(meeting.getMeetingId().toString(), participant.getParticipantId().toString());
-
-            if(participantDAO.getParticipantsByMeetingId(meeting.getMeetingId().toString()).isEmpty()) {
-                deleteMeeting(meeting);
-            }
-
-
 
             return meetingDAO.getMeetingById(meeting.getMeetingId().toString());
         } catch (SQLException e) {
