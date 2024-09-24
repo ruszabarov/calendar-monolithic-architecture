@@ -1,11 +1,8 @@
 package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
-import org.rockets.components.Calendar;
-import org.rockets.components.Meeting;
-import org.rockets.components.Participant;
-import org.rockets.dbmanager.CalendarDAO;
-import org.rockets.dbmanager.MeetingDAO;
+import org.rockets.components.*;
+import org.rockets.controller.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -47,8 +44,8 @@ public class DeleteCommand implements Runnable {
         @Override
         public void run() {
             try {
-                MeetingDAO mtgDAO = new MeetingDAO("jdbc:sqlite:calendar.db");
-                mtgDAO.deleteMeeting(meetingId);
+                MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
+                mtgController.deleteMeeting(meetingId);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -67,8 +64,8 @@ public class DeleteCommand implements Runnable {
         @Override
         public void run() {
             try {
-                CalendarDAO calendarDAO = new CalendarDAO("jdbc:sqlite:calendar.db");
-                calendarDAO.deleteCalendar(calendarId);
+                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
+                calendarController.deleteCalendar(calendarId);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -87,9 +84,8 @@ public class DeleteCommand implements Runnable {
         @Override
         public void run() {
             try {
-                // TODO: Uncomment when ParticipantDAO is implemented
-                //ParticipantDAO participantDAO = new Participant("jdbc:sqlite:calendar.db");
-                //participantDAO.deleteParticipant(participantId);
+                ParticipantController participantController = new Participant("jdbc:sqlite:calendar.db");
+                participantController.deleteParticipant(participantId);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -108,9 +104,8 @@ public class DeleteCommand implements Runnable {
         @Override
         public void run() {
             try {
-                // TODO: Uncomment when ParticipantDAO is implemented
-                //AttachmentDAO attachmentDAO = new AttachmentDAO("jdbc:sqlite:calendar.db");
-                //attachmentDAO.deleteParticipant(attachmentId);
+                AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
+                attachmentController.deleteParticipant(attachmentId);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
