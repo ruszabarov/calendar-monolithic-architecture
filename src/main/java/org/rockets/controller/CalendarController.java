@@ -13,7 +13,7 @@ public class CalendarController {
     CalendarDAO calendarDAO;
     MeetingDAO meetingDAO;
 
-    public CalendarController(String dbUrl) {
+    public CalendarController() {
         try {
             calendarDAO = new CalendarDAO();
             meetingDAO = new MeetingDAO();

@@ -9,7 +9,7 @@ import java.util.List;
 public class ParticipantController {
     private ParticipantDAO participantDAO;
 
-    public ParticipantController(String dbUrl) {
+    public ParticipantController() {
         try {
             this.participantDAO = new ParticipantDAO();
         } catch (SQLException | ClassNotFoundException e) {
@@ -21,8 +21,14 @@ public class ParticipantController {
         participantDAO.createParticipant(participant);
     }
 
-    public Participant getParticipant(String id) throws SQLException {
-        return participantDAO.getParticipantById(id);
+    public Participant getParticipantById(String id) throws SQLException {
+        Participant participant = participantDAO.getParticipantById(id);
+
+        if (participant == null) {
+            throw new RuntimeException("Participant with id " + id + " was not found");
+        }
+
+        return participant;
     }
 
     public List<Participant> getAllParticipants() throws SQLException {

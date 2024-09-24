@@ -4,19 +4,29 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Attachment {
-    private UUID attachmentId;
+    private final UUID attachmentId;
     private String attachmentUrl;
 
-    public Attachment(UUID attachmentId, String attachmentUrl) {
+    public Attachment(UUID attachmentId) {
         this.attachmentId = attachmentId;
+    }
+
+    public Attachment(UUID attachmentId, String attachmentUrl) {
+        this(attachmentId);
         this.attachmentUrl = attachmentUrl;
     }
 
-    public UUID getAttachmentId() { return attachmentId; }
-    public void setAttachmentId(UUID attachmentId) { this.attachmentId = attachmentId; }
+    public UUID getAttachmentId() {
+        return attachmentId;
+    }
 
-    public String getAttachmentUrl() { return attachmentUrl; }
-    public void setAttachmentUrl(String attachmentUrl) { this.attachmentUrl = attachmentUrl; }
+    public String getAttachmentUrl() {
+        return attachmentUrl;
+    }
+
+    public void setAttachmentUrl(String attachmentUrl) {
+        this.attachmentUrl = attachmentUrl;
+    }
 
     @Override
     public boolean equals(Object o) {

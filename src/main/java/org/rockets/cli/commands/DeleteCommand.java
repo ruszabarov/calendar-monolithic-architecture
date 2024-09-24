@@ -1,8 +1,14 @@
 package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
-import org.rockets.components.*;
-import org.rockets.controller.*;
+import org.rockets.components.Attachment;
+import org.rockets.components.Calendar;
+import org.rockets.components.Meeting;
+import org.rockets.components.Participant;
+import org.rockets.controller.AttachmentController;
+import org.rockets.controller.CalendarController;
+import org.rockets.controller.MeetingController;
+import org.rockets.controller.ParticipantController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -65,7 +71,7 @@ public class DeleteCommand implements Runnable {
         @Override
         public void run() {
             try {
-                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
+                CalendarController calendarController = new CalendarController();
                 Calendar calendar = new Calendar(calendarId, null, null);
                 calendarController.deleteCalendar(calendar);
             } catch (Exception e) {
@@ -86,8 +92,8 @@ public class DeleteCommand implements Runnable {
         @Override
         public void run() {
             try {
-                ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
-                Participant participant = new Participant(participantId,null,null);
+                ParticipantController participantController = new ParticipantController();
+                Participant participant = new Participant(participantId, null, null);
                 participantController.deleteParticipant(participant);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
@@ -108,7 +114,7 @@ public class DeleteCommand implements Runnable {
         public void run() {
             try {
                 AttachmentController attachmentController = new AttachmentController();
-                Attachment attachment = new Attachment(attachmentId,null);
+                Attachment attachment = new Attachment(attachmentId, null);
                 attachmentController.deleteAttachment(attachment);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());

@@ -43,8 +43,12 @@ public class MeetingController {
         }
     }
 
-    public Meeting getMeeting(String id) throws SQLException {
+    public Meeting getMeetingById(String id) throws SQLException {
         Meeting meeting = meetingDAO.getMeetingById(id);
+
+        if (meeting == null) {
+            throw new RuntimeException("Meeting with id " + id + " was not found!");
+        }
 
         List<Participant> participants = participantDAO.getParticipantsByMeetingId(id);
         meeting.setParticipants(participants);

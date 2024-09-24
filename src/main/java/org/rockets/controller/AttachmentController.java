@@ -62,17 +62,22 @@ public class AttachmentController {
         meetingDAO.removeAttachmentFromMeeting(meeting.getMeetingId().toString(), attachment.getAttachmentId().toString());
     }
 
-    public Attachment getAttachment(String id) throws SQLException {
-        return this.attachmentDAO.getAttachmentById(id);
+    public Attachment getAttachmentById(String id) throws SQLException {
+        Attachment attachment = this.attachmentDAO.getAttachmentById(id);
+
+        if (attachment == null) {
+            throw new RuntimeException("Attachment with id " + id + " was not found!");
+        }
+
+        return attachment;
     }
 
     public List<Attachment> getAllAttachments() throws SQLException {
         return this.attachmentDAO.getAllAttachments();
     }
 
-    public Attachment updateAttachment(Attachment attachment) throws SQLException {
+    public void updateAttachment(Attachment attachment) throws SQLException {
         this.attachmentDAO.updateAttachment(attachment);
-        return this.attachmentDAO.getAttachmentById(attachment.getAttachmentId().toString());
     }
 
     public void deleteAttachment(Attachment attachment) throws SQLException {

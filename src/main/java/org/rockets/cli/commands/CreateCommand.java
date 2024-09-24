@@ -120,7 +120,7 @@ public class CreateCommand implements Runnable {
                     return;
                 }
                 Calendar calendar = new Calendar(calendarId, title, details);
-                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
+                CalendarController calendarController = new CalendarController();
                 calendarController.createCalendarWithMeetingIds(calendar, meetingIds);
 
                 System.out.println("Successfully create a calendar (" + calendar.getCalendarId() + ")");
@@ -155,7 +155,7 @@ public class CreateCommand implements Runnable {
             }
             try {
                 Participant participant = new Participant(participantId, name, email);
-                ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
+                ParticipantController participantController = new ParticipantController();
                 participantController.createParticipant(participant);
 
                 System.out.println("Successfully created participant (" + participant.getParticipantId() + ")");

@@ -6,23 +6,23 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Calendar {
-    private UUID calendarId;
+    private final UUID calendarId;
     private String title;
     private String details;
     private List<Meeting> meetings = new ArrayList<>();
 
-    public Calendar(UUID calendarId, String title, String details) {
+    public Calendar(UUID calendarId) {
         this.calendarId = calendarId;
+    }
+
+    public Calendar(UUID calendarId, String title, String details) {
+        this(calendarId);
         this.title = title;
         this.details = details;
     }
 
     public UUID getCalendarId() {
         return calendarId;
-    }
-
-    public void setCalendarId(UUID calendarId) {
-        this.calendarId = calendarId;
     }
 
     public String getTitle() {

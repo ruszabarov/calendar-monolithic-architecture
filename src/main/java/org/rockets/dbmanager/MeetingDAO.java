@@ -84,7 +84,7 @@ public class MeetingDAO {
             pstmt.setString(2, meeting.getDateTime());
             pstmt.setString(3, meeting.getLocation());
             pstmt.setString(4, meeting.getDetails());
-            pstmt.setString(8, meeting.getMeetingId().toString());
+            pstmt.setString(5, meeting.getMeetingId().toString());
             pstmt.executeUpdate();
         }
     }

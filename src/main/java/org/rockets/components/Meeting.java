@@ -6,15 +6,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Meeting {
-    private UUID meetingId;
+    private final UUID meetingId;
     private String title;
     private String dateTime;
     private String location;
     private String details;
     private List<Participant> participants = new ArrayList<>();
-    private List<Attachment> attachments = new ArrayList<>();;
+    private List<Attachment> attachments = new ArrayList<>();
+    ;
 
-    private List<Calendar> calendars  = new ArrayList<>();;
+    private List<Calendar> calendars = new ArrayList<>();
+    ;
 
     public Meeting(UUID uuid) {
         this.meetingId = uuid;
@@ -30,10 +32,6 @@ public class Meeting {
 
     public UUID getMeetingId() {
         return meetingId;
-    }
-
-    public void setMeetingId(UUID meetingId) {
-        this.meetingId = meetingId;
     }
 
     public String getTitle() {

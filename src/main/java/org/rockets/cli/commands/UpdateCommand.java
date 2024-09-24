@@ -41,19 +41,19 @@ public class UpdateCommand implements Runnable {
     public static class UpdateMeetingCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(UpdateMeetingCommand.class);
 
-        @Option(names = "-id", description = "Meeting ID", required = true)
+        @Option(names = "--id", description = "Meeting ID", required = true)
         private String id;
 
-        @Option(names = "-title", description = "New meeting title")
+        @Option(names = "--title", description = "New meeting title")
         private String title;
 
-        @Option(names = "-datetime", description = "New meeting date and time")
+        @Option(names = "--datetime", description = "New meeting date and time")
         private String dateTime;
 
-        @Option(names = "-location", description = "New meeting location")
+        @Option(names = "--location", description = "New meeting location")
         private String location;
 
-        @Option(names = "-details", description = "New meeting details")
+        @Option(names = "--details", description = "New meeting details")
         private String details;
 
         @Option(names = "--add-calendarId", description = "Add a Calendar ID to the meeting")
@@ -86,7 +86,11 @@ public class UpdateCommand implements Runnable {
             }
             try {
                 MeetingController mtgController = new MeetingController();
-                Meeting meeting = mtgController.getMeeting(id);
+                AttachmentController attachmentController = new AttachmentController();
+                CalendarController calendarController = new CalendarController();
+
+                Meeting meeting = mtgController.getMeetingById(id);
+
                 if (title != null) {
                     title = Check.limitString(title, 2000);
                     meeting.setTitle(title);
@@ -107,36 +111,35 @@ public class UpdateCommand implements Runnable {
                     meeting.setDetails(details);
                 }
                 if (addCalendarId != null) {
-                    Calendar calendar = new Calendar(addCalendarId, null, null);
-                    meeting.addCalendar(calendar);
+                    Calendar calendar = new Calendar(addCalendarId);
+                    calendarController.addMeetingToCalendar(calendar, meeting);
                 }
                 if (removeCalendarId != null) {
-                    Calendar calendar = new Calendar(removeCalendarId, null, null);
-                    meeting.removeCalendar(calendar);
+                    Calendar calendar = new Calendar(removeCalendarId);
+                    calendarController.removeMeetingFromCalendar(calendar, meeting);
                 }
                 if (addParticipantId != null) {
-                    Participant participant = new Participant(addParticipantId, null, null);
-                    meeting.addParticipant(participant);
+                    Participant participant = new Participant(addParticipantId);
+                    mtgController.addParticipantToMeeting(meeting, participant);
                 }
                 if (removeParticipantId != null) {
-                    Participant participant = new Participant(removeParticipantId, null, null);
-                    meeting.addParticipant(participant);
-                    meeting.removeParticipant(participant);
+                    Participant participant = new Participant(removeParticipantId);
+                    mtgController.removeParticipantFromMeeting(meeting, participant);
                 }
                 if (addAttachmentId != null) {
-                    Attachment attachment = new Attachment(addAttachmentId, null);
-                    meeting.addAttachment(attachment);
+                    Attachment attachment = new Attachment(addAttachmentId);
+                    attachmentController.addAttachmentToMeeting(meeting, attachment);
                 }
                 if (removeAttachmentId != null) {
-                    Attachment attachment = new Attachment(removeAttachmentId, null);
-                    meeting.removeAttachment(attachment);
+                    Attachment attachment = new Attachment(removeAttachmentId);
+                    attachmentController.removeAttachmentFromMeeting(meeting, attachment);
                 }
+
                 mtgController.updateMeeting(meeting);
+                System.out.println("Successfully updated meeting (" + id + ")");
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-            logger.info("Updating meeting with ID = " + id);
-            // Implement update logic here
         }
     }
 
@@ -145,13 +148,13 @@ public class UpdateCommand implements Runnable {
     public static class UpdateCalendarCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(UpdateCalendarCommand.class);
 
-        @Option(names = "-id", description = "Calendar ID", required = true)
+        @Option(names = "--id", description = "Calendar ID", required = true)
         private UUID id;
 
-        @Option(names = "-title", description = "New calendar title")
+        @Option(names = "--title", description = "New calendar title")
         private String title;
 
-        @Option(names = "-details", description = "New calendar details")
+        @Option(names = "--details", description = "New calendar details")
         private String details;
 
         @Option(names = "--add-meetingId", description = "Add a Meeting ID to the calendar")
@@ -164,7 +167,7 @@ public class UpdateCommand implements Runnable {
         public void run() {
             // Check at least one option is provided
             try {
-                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
+                CalendarController calendarController = new CalendarController();
                 Calendar calendar = calendarController.getCalendarById(id);
 
                 // Check if at least one update option is specified
@@ -184,14 +187,15 @@ public class UpdateCommand implements Runnable {
                 }
                 if (addMeetingId != null) {
                     Meeting meeting = new Meeting(addMeetingId);
-                    calendar.addMeeting(meeting);
+                    calendarController.addMeetingToCalendar(calendar, meeting);
                 }
                 if (removeMeetingId != null) {
                     Meeting meeting = new Meeting(removeMeetingId);
-                    calendar.removeMeeting(meeting);
+                    calendarController.removeMeetingFromCalendar(calendar, meeting);
                 }
-                logger.info("Updating calendar with ID = " + id);
                 calendarController.updateCalendar(calendar);
+                System.out.println("Successfully updated calendar (" + id + ")");
+
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -203,21 +207,21 @@ public class UpdateCommand implements Runnable {
     public static class UpdateParticipantCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(UpdateParticipantCommand.class);
 
-        @Option(names = "-id", description = "Participant ID", required = true)
+        @Option(names = "--id", description = "Participant ID", required = true)
         private String id;
 
-        @Option(names = "-name", description = "New participant name")
+        @Option(names = "--name", description = "New participant name")
         private String name;
 
-        @Option(names = "-email", description = "New participant email")
+        @Option(names = "--email", description = "New participant email")
         private String email;
 
         @Override
         public void run() {
             try {
-                ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
-                Participant participant = null;
-                participant = participantController.getParticipant(id);
+                ParticipantController participantController = new ParticipantController();
+                Participant participant = participantController.getParticipantById(id);
+
                 if (name == null && email == null) {
                     logger.error("At least one update option must be specified.");
                     return;
@@ -234,11 +238,8 @@ public class UpdateCommand implements Runnable {
                     participant.setEmail(email);
                 }
 
-                if (name != null) participant.setName(name);
-                if (email != null) participant.setEmail(email);
-                logger.info("Updating participant with ID = " + id);
                 participantController.updateParticipant(participant);
-
+                System.out.println("Successfully updated participant (" + id + ")");
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -251,17 +252,17 @@ public class UpdateCommand implements Runnable {
     public static class UpdateAttachmentCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(UpdateAttachmentCommand.class);
 
-        @Option(names = "-id", description = "Attachment ID", required = true)
+        @Option(names = "--id", description = "Attachment ID", required = true)
         private String id;
 
-        @Option(names = "-url", description = "New attachment URL")
+        @Option(names = "--url", description = "New attachment URL")
         private String url;
 
         @Override
         public void run() {
             try {
                 AttachmentController attachmentController = new AttachmentController();
-                Attachment attachment = attachmentController.getAttachment(id);
+                Attachment attachment = attachmentController.getAttachmentById(id);
 
                 if (url == null) {
                     logger.error("At least one update option must be specified.");
@@ -271,9 +272,11 @@ public class UpdateCommand implements Runnable {
                     logger.error("Invalid URL");
                     return;
                 }
+
                 attachment.setAttachmentUrl(url);
-                logger.info("Updating attachment with ID = " + id);
+
                 attachmentController.updateAttachment(attachment);
+                System.out.println("Successfully updated attachment (" + id + ")");
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }

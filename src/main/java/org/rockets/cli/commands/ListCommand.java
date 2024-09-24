@@ -53,7 +53,7 @@ public class ListCommand implements Runnable {
             try {
                 MeetingController mtgController = new MeetingController();
                 if (meetingId != null) {
-                    Meeting meeting = mtgController.getMeeting(meetingId);
+                    Meeting meeting = mtgController.getMeetingById(meetingId);
                     logger.info("Listing details for meeting with UUID = " + meetingId);
                     System.out.println(meeting);
                     System.out.println(meeting.participantsToString());
@@ -83,7 +83,7 @@ public class ListCommand implements Runnable {
         @Override
         public void run() {
             try {
-                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
+                CalendarController calendarController = new CalendarController();
                 if (calendarId != null) {
                     Calendar calendar = calendarController.getCalendarById(calendarId);
                     logger.info("Listing details for calendar with UUID = " + calendarId);
@@ -113,9 +113,9 @@ public class ListCommand implements Runnable {
         @Override
         public void run() {
             try {
-                ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
+                ParticipantController participantController = new ParticipantController();
                 if (participantId != null) {
-                    Participant participant = participantController.getParticipant(participantId);
+                    Participant participant = participantController.getParticipantById(participantId);
                     logger.info("Listing details for participant with UUID = " + participantId);
                     System.out.println(participant);
                 } else {
@@ -144,7 +144,7 @@ public class ListCommand implements Runnable {
             try {
                 AttachmentController attachmentController = new AttachmentController();
                 if (attachmentId != null) {
-                    Attachment attachment = attachmentController.getAttachment(attachmentId);
+                    Attachment attachment = attachmentController.getAttachmentById(attachmentId);
                     logger.info("Listing details for attachment with UUID = " + attachmentId);
                     System.out.println(attachment);
                 } else {
