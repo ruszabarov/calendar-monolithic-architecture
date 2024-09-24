@@ -2,7 +2,10 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
-import org.rockets.controller.*;
+import org.rockets.controller.AttachmentController;
+import org.rockets.controller.CalendarController;
+import org.rockets.controller.MeetingController;
+import org.rockets.controller.ParticipantController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -82,10 +85,10 @@ public class UpdateCommand implements Runnable {
                 return;
             }
             try {
-                MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
+                MeetingController mtgController = new MeetingController();
                 Meeting meeting = mtgController.getMeeting(id);
-                if (title != null){
-                    title = Check.limitString(title,2000);
+                if (title != null) {
+                    title = Check.limitString(title, 2000);
                     meeting.setTitle(title);
                 }
                 if (dateTime != null) {
@@ -96,27 +99,27 @@ public class UpdateCommand implements Runnable {
                     meeting.setDateTime(dateTime);
                 }
                 if (location != null) {
-                    Check.limitString(location,2000);
+                    Check.limitString(location, 2000);
                     meeting.setLocation(location);
                 }
                 if (details != null) {
-                    Check.limitString(details,10000);
+                    Check.limitString(details, 10000);
                     meeting.setDetails(details);
                 }
                 if (addCalendarId != null) {
-                    Calendar calendar = new Calendar(addCalendarId,null,null);
+                    Calendar calendar = new Calendar(addCalendarId, null, null);
                     meeting.addCalendar(calendar);
                 }
                 if (removeCalendarId != null) {
-                    Calendar calendar = new Calendar(removeCalendarId,null,null);
+                    Calendar calendar = new Calendar(removeCalendarId, null, null);
                     meeting.removeCalendar(calendar);
                 }
                 if (addParticipantId != null) {
-                    Participant participant = new Participant(addParticipantId,null,null);
+                    Participant participant = new Participant(addParticipantId, null, null);
                     meeting.addParticipant(participant);
                 }
                 if (removeParticipantId != null) {
-                    Participant participant = new Participant(removeParticipantId,null,null);
+                    Participant participant = new Participant(removeParticipantId, null, null);
                     meeting.addParticipant(participant);
                     meeting.removeParticipant(participant);
                 }
@@ -172,18 +175,18 @@ public class UpdateCommand implements Runnable {
 
                 // Apply updates to the calendar
                 if (title != null) {
-                    Check.limitString(title,2000);
+                    Check.limitString(title, 2000);
                     calendar.setTitle(title);
                 }
                 if (details != null) {
-                    Check.limitString(details,10000);
+                    Check.limitString(details, 10000);
                     calendar.setDetails(details);
                 }
                 if (addMeetingId != null) {
                     Meeting meeting = new Meeting(addMeetingId);
                     calendar.addMeeting(meeting);
                 }
-                if (removeMeetingId != null){
+                if (removeMeetingId != null) {
                     Meeting meeting = new Meeting(removeMeetingId);
                     calendar.removeMeeting(meeting);
                 }
@@ -211,31 +214,35 @@ public class UpdateCommand implements Runnable {
 
         @Override
         public void run() {
-            ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
-            Participant participant = participantController.getParticipant(id);
-            if (name == null && email == null ) {
-                logger.error("At least one update option must be specified.");
-                return;
-            }
-            if (name != null) {
-                Check.limitString(name,600);
-                participant.setName(name);
-            }
-            if (email != null) {
-                if (!Check.isValidEmail(email)) {
-                    logger.error("Invalid URL");
+            try {
+                ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
+                Participant participant = null;
+                participant = participantController.getParticipant(id);
+                if (name == null && email == null) {
+                    logger.error("At least one update option must be specified.");
                     return;
                 }
-                participant.setEmail(email);
-            }
-            try {
+                if (name != null) {
+                    Check.limitString(name, 600);
+                    participant.setName(name);
+                }
+                if (email != null) {
+                    if (!Check.isValidEmail(email)) {
+                        logger.error("Invalid URL");
+                        return;
+                    }
+                    participant.setEmail(email);
+                }
+
                 if (name != null) participant.setName(name);
                 if (email != null) participant.setEmail(email);
                 logger.info("Updating participant with ID = " + id);
                 participantController.updateParticipant(participant);
+
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
+
         }
     }
 

@@ -66,7 +66,7 @@ public class AttachmentDAO {
     }
 
     public List<Attachment> getAttachmentsByMeetingId(String meetingId) throws SQLException {
-        String sql = "SELECT * FROM MeetingAttachment WHERE MeetingId = ?;";
+        String sql = "SELECT Attachments.* FROM Attachments JOIN MeetingAttachment ON Attachments.AttachmentId = MeetingAttachment.AttachmentId WHERE MeetingId = ?;";
         List<Attachment> attachments = new ArrayList<>();
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, meetingId);
@@ -81,6 +81,28 @@ public class AttachmentDAO {
             }
         }
         return attachments;
+    }
+
+    // Read participants by MeetingId
+    public List<Participant> getParticipantsByMeetingId(String meetingId) throws SQLException {
+        String sql = "SELECT Participants.* FROM Participants JOIN MeetingParticipant ON Participants.ParticipantId = MeetingParticipant.ParticipantId WHERE MeetingId = ?;";
+
+        List<Participant> participants = new ArrayList<>();
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, meetingId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Participant participant = new Participant(
+                            UUID.fromString(rs.getString("ParticipantId")),
+                            rs.getString("Name"),
+                            rs.getString("Email")
+                    );
+                    participants.add(participant);
+                }
+            }
+        }
+        return participants;
     }
 
     // Update an attachment
@@ -103,13 +125,6 @@ public class AttachmentDAO {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, attachmentId);
             pstmt.executeUpdate();
-        }
-    }
-
-    // Close the connection when done
-    public void close() throws SQLException {
-        if (conn != null && !conn.isClosed()) {
-            conn.close();
         }
     }
 }

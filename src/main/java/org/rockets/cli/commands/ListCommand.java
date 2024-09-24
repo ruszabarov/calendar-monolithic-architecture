@@ -45,7 +45,7 @@ public class ListCommand implements Runnable {
         @Override
         public void run() {
             try {
-                MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
+                MeetingController mtgController = new MeetingController();
                 if (meetingId != null) {
                     Meeting meeting = mtgController.getMeeting(meetingId);
                     logger.info("Listing details for meeting with UUID = " + meetingId);

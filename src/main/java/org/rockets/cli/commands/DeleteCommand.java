@@ -44,7 +44,7 @@ public class DeleteCommand implements Runnable {
         @Override
         public void run() {
             try {
-                MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
+                MeetingController mtgController = new MeetingController();
                 Meeting meeting = new Meeting(meetingId);
                 mtgController.deleteMeeting(meeting);
             } catch (Exception e) {

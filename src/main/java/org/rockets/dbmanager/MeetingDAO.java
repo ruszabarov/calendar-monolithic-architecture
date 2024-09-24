@@ -134,12 +134,5 @@ public class MeetingDAO {
             pstmt.executeUpdate();
         }
     }
-
-    // Close the connection when done
-    public void close() throws SQLException {
-        if (conn != null && !conn.isClosed()) {
-            conn.close();
-        }
-    }
 }
 

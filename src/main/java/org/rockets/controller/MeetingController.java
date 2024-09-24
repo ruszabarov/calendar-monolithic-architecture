@@ -10,10 +10,7 @@ import org.rockets.dbmanager.MeetingDAO;
 import org.rockets.dbmanager.ParticipantDAO;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class MeetingController {
     private MeetingDAO meetingDAO;
@@ -21,7 +18,7 @@ public class MeetingController {
     private AttachmentDAO attachmentDAO;
     private CalendarDAO calendarDAO;
 
-    public MeetingController(String dbUrl) {
+    public MeetingController() {
         try {
             this.meetingDAO = new MeetingDAO();
             this.participantDAO = new ParticipantDAO();
@@ -32,161 +29,70 @@ public class MeetingController {
         }
     }
 
-    public void createMeetingWithParticipants(Meeting meeting, List<String> participantIds) {
-        try {
-            meetingDAO.createMeeting(meeting);
+    public void createMeetingWithParticipants(Meeting meeting, List<String> participantIds) throws SQLException {
+        meetingDAO.createMeeting(meeting);
 
-            for (String participantId : participantIds) {
-                Participant participant = participantDAO.getParticipantById(participantId);
+        for (String participantId : participantIds) {
+            Participant participant = participantDAO.getParticipantById(participantId);
 
-                if (participant == null) {
-                    System.err.println("Participant with id " + participantId + " was not found!");
-                } else {
-                    meetingDAO.addParticipantToMeeting(meeting.getMeetingId().toString(), participant.getParticipantId().toString());
-                }
-            }
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    public Meeting getMeeting(String id) {
-        try {
-            Meeting meeting = meetingDAO.getMeetingById(id);
-
-            List<Participant> participants = participantDAO.getParticipantsByMeetingId(id);
-            meeting.setParticipants(participants);
-
-            List<Attachment> attachments = attachmentDAO.getAttachmentsByMeetingId(id);
-            meeting.setAttachments(attachments);
-
-            List<Calendar> calendars = calendarDAO.getCalendarsByMeetingId(id);
-            meeting.setCalendars(calendars);
-
-            return meeting;
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    public List<Meeting> getAllMeetings() {
-        try {
-            return meetingDAO.getAllMeetings();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return Collections.emptyList();
-    }
-
-    public Meeting updateMeeting(Meeting meeting) {
-        try {
-            meetingDAO.updateMeeting(meeting);
-            return meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return meeting;
-    }
-
-    public void deleteMeeting(Meeting meeting) {
-        try {
-            meetingDAO.deleteMeeting(meeting.getMeetingId().toString());
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    public Meeting addParticipantToMeeting(Meeting meeting, Participant participant) {
-        try {
-            Participant p = participantDAO.getParticipantById(participant.getParticipantId().toString());
-
-            if (p == null) {
-                System.err.println("Participant with id " + participant.getParticipantId() + " was not found!");
-                return meeting;
-            }
-
-            Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-
-            if (m == null) {
-                System.err.println("Meeting with id " + meeting.getMeetingId() + " was not found!");
-                return meeting;
+            if (participant == null) {
+                throw new SQLException("Participant with id " + participantId + " was not found!");
             }
 
             meetingDAO.addParticipantToMeeting(meeting.getMeetingId().toString(), participant.getParticipantId().toString());
-            return meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
         }
+    }
+
+    public Meeting getMeeting(String id) throws SQLException {
+        Meeting meeting = meetingDAO.getMeetingById(id);
+
+        List<Participant> participants = participantDAO.getParticipantsByMeetingId(id);
+        meeting.setParticipants(participants);
+
+        List<Attachment> attachments = attachmentDAO.getAttachmentsByMeetingId(id);
+        meeting.setAttachments(attachments);
+
+        List<Calendar> calendars = calendarDAO.getCalendarsByMeetingId(id);
+        meeting.setCalendars(calendars);
 
         return meeting;
     }
 
-    public Meeting removeParticipantFromMeeting(Meeting meeting, Participant participant) {
-        try {
-            Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-
-            if (m == null) {
-                System.err.println("Meeting with id " + meeting.getMeetingId() + " was not found!");
-                return meeting;
-            }
-
-            meetingDAO.removeParticipantFromMeeting(meeting.getMeetingId().toString(), participant.getParticipantId().toString());
-
-            return meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return meeting;
+    public List<Meeting> getAllMeetings() throws SQLException {
+        return meetingDAO.getAllMeetings();
     }
 
-    public Meeting addAttachmentToMeeting(Meeting meeting, Attachment attachment) {
-        try {
-            Attachment a = attachmentDAO.getAttachmentById(attachment.getAttachmentId().toString());
-
-            if (a == null) {
-                System.err.println("Attachment with id " + attachment.getAttachmentId() + " was not found!");
-                return meeting;
-            }
-
-            Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-
-            if (m == null) {
-                System.err.println("Meeting with id " + meeting.getMeetingId() + " was not found!");
-                return meeting;
-            }
-
-            meetingDAO.addAttachmentToMeeting(meeting.getMeetingId().toString(), attachment.getAttachmentId().toString());
-            return meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return meeting;
+    public void updateMeeting(Meeting meeting) throws SQLException {
+        meetingDAO.updateMeeting(meeting);
     }
 
-    public Meeting removeAttachmentFromMeeting(Meeting meeting, Attachment attachment) {
-        try {
-            Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
+    public void deleteMeeting(Meeting meeting) throws SQLException {
+        meetingDAO.deleteMeeting(meeting.getMeetingId().toString());
+    }
 
-            if (m == null) {
-                System.err.println("Meeting with id " + attachment.getAttachmentId() + " was not found!");
-                return meeting;
-            }
+    public void addParticipantToMeeting(Meeting meeting, Participant participant) throws SQLException {
+        Participant p = participantDAO.getParticipantById(participant.getParticipantId().toString());
 
-            meetingDAO.removeAttachmentFromMeeting(meeting.getMeetingId().toString(), attachment.getAttachmentId().toString());
-            return meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+        if (p == null) {
+            throw new SQLException("Participant with id " + participant.getParticipantId() + " was not found!");
         }
 
-        return meeting;
+        Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
+
+        if (m == null) {
+            throw new SQLException("Meeting with id " + meeting.getMeetingId() + " was not found!");
+        }
+
+        meetingDAO.addParticipantToMeeting(meeting.getMeetingId().toString(), participant.getParticipantId().toString());
+    }
+
+    public void removeParticipantFromMeeting(Meeting meeting, Participant participant) throws SQLException {
+        Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
+
+        if (m == null) {
+            throw new SQLException("Meeting with id " + meeting.getMeetingId() + " was not found!");
+        }
+
+        meetingDAO.removeParticipantFromMeeting(meeting.getMeetingId().toString(), participant.getParticipantId().toString());
     }
 }

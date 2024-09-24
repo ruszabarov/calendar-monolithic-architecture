@@ -21,95 +21,55 @@ public class CalendarController {
         }
     }
 
-    public void createCalendarWithMeetingIds(Calendar calendar, List<String> meetingIds) {
-        try {
-            calendarDAO.createCalendar(calendar);
-            for (String meetingId : meetingIds) {
+    public void createCalendarWithMeetingIds(Calendar calendar, List<String> meetingIds) throws SQLException {
+        calendarDAO.createCalendar(calendar);
 
-                Meeting meeting = meetingDAO.getMeetingById(meetingId);
+        for (String meetingId : meetingIds) {
+            Meeting meeting = meetingDAO.getMeetingById(meetingId);
 
-                if (meeting != null) {
-                    calendarDAO.addMeetingToCalendar(calendar.getCalendarId().toString(), meetingId);
-                } else {
-                    System.err.println("Meeting with id " + meetingId + " does not exist!");
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    public Calendar getCalendarById(UUID id) {
-        try {
-            return calendarDAO.getCalendarById(id.toString());
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    public List<Calendar> getAllCalendars() {
-        try {
-            return calendarDAO.getAllCalendars();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    public Calendar updateCalendar(Calendar calendar) {
-        try {
-            calendarDAO.updateCalendar(calendar);
-            return calendarDAO.getCalendarById(calendar.getCalendarId().toString());
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return calendar;
-    }
-
-    public void deleteCalendar(Calendar calendar) {
-        try {
-            calendarDAO.deleteCalendar(calendar.getCalendarId().toString());
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    public Calendar addMeetingToCalendar(Calendar calendar, Meeting meeting) {
-        try {
-            Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
-
-            if (m == null) {
-                System.err.println("No meeting with id " + meeting.getMeetingId() + " was found!");
-                return calendar;
+            if (meeting == null) {
+                throw new SQLException("Meeting with id " + meetingId + " does not exist!");
             }
 
-            calendarDAO.addMeetingToCalendar(meeting.getMeetingId().toString(), calendar.getCalendarId().toString());
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            calendarDAO.addMeetingToCalendar(calendar.getCalendarId().toString(), meetingId);
         }
 
-        return calendar;
     }
 
-    public Calendar removeMeetingFromCalendar(Calendar calendar, Meeting meeting) {
-        try {
-            Calendar c = calendarDAO.getCalendarById(calendar.getCalendarId().toString());
+    public Calendar getCalendarById(UUID id) throws SQLException {
+        return calendarDAO.getCalendarById(id.toString());
+    }
 
-            if (c == null) {
-                System.err.println("Calendar with id " + calendar.getCalendarId() + " was not found!");
-                return calendar;
-            }
+    public List<Calendar> getAllCalendars() throws SQLException {
+        return calendarDAO.getAllCalendars();
+    }
 
-            calendarDAO.removeMeetingFromCalendar(meeting.getMeetingId().toString(), calendar.getCalendarId().toString());
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
+    public void updateCalendar(Calendar calendar) throws SQLException {
+        calendarDAO.updateCalendar(calendar);
+    }
+
+    public void deleteCalendar(Calendar calendar) throws SQLException {
+        calendarDAO.deleteCalendar(calendar.getCalendarId().toString());
+    }
+
+    public void addMeetingToCalendar(Calendar calendar, Meeting meeting) throws SQLException {
+        Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
+
+        if (m == null) {
+            throw new SQLException("No meeting with id " + meeting.getMeetingId() + " was found!");
         }
 
-        return calendar;
+        calendarDAO.addMeetingToCalendar(meeting.getMeetingId().toString(), calendar.getCalendarId().toString());
+    }
+
+    public void removeMeetingFromCalendar(Calendar calendar, Meeting meeting) throws SQLException {
+        Calendar c = calendarDAO.getCalendarById(calendar.getCalendarId().toString());
+
+        if (c == null) {
+            throw new SQLException("Calendar with id " + calendar.getCalendarId() + " was not found!");
+        }
+
+        calendarDAO.removeMeetingFromCalendar(meeting.getMeetingId().toString(), calendar.getCalendarId().toString());
+
     }
 }

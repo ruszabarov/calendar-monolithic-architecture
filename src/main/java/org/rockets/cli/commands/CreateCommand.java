@@ -80,7 +80,7 @@ public class CreateCommand implements Runnable {
                 details = Check.limitString(details,10000);
 
                 Meeting meeting = new Meeting(meetingId, title, dateTime, location, details);
-                MeetingController meetingController = new MeetingController("jdbc:sqlite:calendar.db");
+                MeetingController meetingController = new MeetingController();
                 meetingController.createMeetingWithParticipants(meeting, participantIds);
 
                 System.out.println("Successfully create a meeting (" + meeting.getMeetingId() + ")");
@@ -190,12 +190,16 @@ public class CreateCommand implements Runnable {
             try {
                 Attachment attachment = new Attachment(attachmentId, url);
                 AttachmentController attachmentController = new AttachmentController();
-                attachmentController.createAttachment(attachment);
+
+                Meeting meeting = new Meeting(UUID.fromString(meetingId));
+
+                attachmentController.createAttachmentWithMeeting(attachment, meeting);
+
+                System.out.println("Successfully created an attachment (" + attachment.getAttachmentId() + ")");
 
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-            logger.info("Creating attachment with URL = " + url + ", meetingId = " + meetingId);
         }
     }
 }
