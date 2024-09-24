@@ -110,12 +110,6 @@ public class MeetingController {
 
             meetingDAO.removeParticipantFromMeeting(meeting.getMeetingId().toString(), participant.getParticipantId().toString());
 
-            if(participantDAO.getParticipantsByMeetingId(meeting.getMeetingId().toString()).isEmpty()) {
-                deleteMeeting(meeting);
-            }
-
-
-
             return meetingDAO.getMeetingById(meeting.getMeetingId().toString());
         } catch (SQLException e) {
             System.err.println(e.getMessage());

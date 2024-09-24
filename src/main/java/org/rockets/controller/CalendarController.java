@@ -98,7 +98,6 @@ public class CalendarController {
             }
 
             calendarDAO.removeMeetingFromCalendar(meeting.getMeetingId().toString(), calendar.getCalendarId().toString());
-
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
