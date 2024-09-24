@@ -1,9 +1,11 @@
 package org.rockets.controller;
 
 import org.rockets.components.Attachment;
+import org.rockets.components.Calendar;
 import org.rockets.components.Meeting;
 import org.rockets.components.Participant;
 import org.rockets.dbmanager.AttachmentDAO;
+import org.rockets.dbmanager.CalendarDAO;
 import org.rockets.dbmanager.MeetingDAO;
 import org.rockets.dbmanager.ParticipantDAO;
 
@@ -17,6 +19,7 @@ public class MeetingController {
     private MeetingDAO meetingDAO;
     private ParticipantDAO participantDAO;
     private AttachmentDAO attachmentDAO;
+    private CalendarDAO calendarDAO;
 
     public MeetingController(String dbUrl) {
         try {
@@ -56,6 +59,9 @@ public class MeetingController {
 
             List<Attachment> attachments = attachmentDAO.getAttachmentsByMeetingId(id);
             meeting.setAttachments(attachments);
+
+            List<Calendar> calendars = calendarDAO.getCalendarsByMeetingId(id);
+            meeting.setCalendars(calendars);
 
             return meeting;
         } catch (SQLException e) {

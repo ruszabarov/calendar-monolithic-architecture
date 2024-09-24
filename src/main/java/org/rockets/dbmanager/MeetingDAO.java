@@ -1,4 +1,5 @@
 package org.rockets.dbmanager;
+import org.rockets.components.Calendar;
 import org.rockets.components.Meeting;
 import java.sql.*;
 import java.util.ArrayList;

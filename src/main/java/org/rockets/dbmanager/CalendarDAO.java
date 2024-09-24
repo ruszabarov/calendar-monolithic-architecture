@@ -113,4 +113,23 @@ public class CalendarDAO {
         return meetingIds;
     }
 
+    public List<Calendar> getCalendarsByMeetingId(String calendarId) throws SQLException {
+        String sql = "SELECT Calendars.* FROM Calendars JOIN MeetingCalendar ON Calendars.calendarId = MeetingCalendar.calendarId WHERE MeetingCalendar.MeetingId = ?";
+
+        List<Calendar> calendars = new ArrayList<>();
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, calendarId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Calendar calendar = new Calendar(UUID.fromString(rs.getString("Calendars.CalendarId")), rs.getString("Meetings.Title"), rs.getString("Meetings.Details"));
+                    calendars.add(calendar);
+                }
+            }
+        }
+
+        return calendars;
+    }
+
 }
