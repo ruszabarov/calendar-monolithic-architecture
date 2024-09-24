@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class MeetingController {
     private MeetingDAO meetingDAO;
@@ -48,7 +49,15 @@ public class MeetingController {
 
     public Meeting getMeeting(String id) {
         try {
-            return meetingDAO.getMeetingById(id);
+            Meeting meeting = meetingDAO.getMeetingById(id);
+
+            List<Participant> participants = participantDAO.getParticipantsByMeetingId(id);
+            meeting.setParticipants(participants);
+
+            List<Attachment> attachments = attachmentDAO.getAttachmentsByMeetingId(id);
+            meeting.setAttachments(attachments);
+
+            return meeting;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }

@@ -2,6 +2,7 @@ package org.rockets.dbmanager;
 
 import org.rockets.components.Attachment;
 import org.rockets.components.Check;
+import org.rockets.components.Participant;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -63,6 +64,24 @@ public class AttachmentDAO {
                 }
             }
         }
+    }
+
+    public List<Attachment> getAttachmentsByMeetingId(String meetingId) throws SQLException {
+        String sql = "SELECT * FROM MeetingAttachment WHERE MeetingId = ?;";
+        List<Attachment> attachments = new ArrayList<>();
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, meetingId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Attachment attachment = new Attachment(
+                            UUID.fromString(rs.getString("AttachmentId")),
+                            rs.getString("URL")
+                    );
+                    attachments.add(attachment);
+                }
+            }
+        }
+        return attachments;
     }
 
     // Update an attachment

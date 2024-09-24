@@ -1,6 +1,7 @@
 package org.rockets.components;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -43,5 +44,18 @@ public class Calendar {
         if (meeting != null) {
             meetings.remove(meeting);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Calendar calendar = (Calendar) o;
+        return Objects.equals(calendarId, calendar.getCalendarId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(calendarId);
     }
 }
