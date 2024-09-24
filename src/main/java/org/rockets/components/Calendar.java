@@ -10,7 +10,7 @@ public class Calendar {
     private UUID calendarId;
     private String title;
     private String details;
-    private List<Meeting> meetings;
+    private List<Meeting> meetings  = new ArrayList<>();
 
     public Calendar(UUID calendarId, String title, String details) {
         this.calendarId = calendarId;
@@ -57,5 +57,17 @@ public class Calendar {
     @Override
     public int hashCode() {
         return Objects.hash(calendarId);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("(Calendar) id: " + getCalendarId() + " | title: " + getTitle()
+                + " | details: " + getDetails() + "\nMeetings:\n");
+
+        for (Meeting m : getMeetings()) {
+            result.append("\t").append(m.toString()).append("\n");
+        }
+
+        return result.toString();
     }
 }

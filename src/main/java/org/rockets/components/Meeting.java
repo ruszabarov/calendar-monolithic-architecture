@@ -1,5 +1,6 @@
 package org.rockets.components;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -10,10 +11,10 @@ public class Meeting {
     private String dateTime;
     private String location;
     private String details;
-    private List<Participant> participants;
-    private List<Attachment> attachments;
+    private List<Participant> participants = new ArrayList<>();
+    private List<Attachment> attachments = new ArrayList<>();;
 
-    private List<Calendar> calendars;
+    private List<Calendar> calendars  = new ArrayList<>();;
 
     public Meeting(UUID uuid) {
         this.meetingId = uuid;
@@ -138,6 +139,41 @@ public class Meeting {
     @Override
     public int hashCode() {
         return Objects.hash(meetingId);
+    }
+
+    @Override
+    public String toString() {
+        return "(Meeting) id: " + getMeetingId() + " | title: " + getTitle() + " | date: "
+                + getDateTime() + " | location: " + getLocation() + " | details: "
+                + getDetails();
+    }
+
+    public String participantsToString() {
+        StringBuilder result = new StringBuilder("Participants:\n");
+        for (Participant p : getParticipants()) {
+            result.append("\t").append(p.toString()).append("\n");
+        }
+        return result.toString();
+    }
+
+    public String attachmentsToString() {
+        StringBuilder result = new StringBuilder("Attachments:\n");
+
+        for (Attachment a : getAttachments()) {
+            result.append("\t").append(a.toString()).append("\n");
+        }
+
+        return result.toString();
+    }
+
+    public String calendarsToString() {
+        StringBuilder result = new StringBuilder("Calendars:\n");
+
+        for (Calendar c : getCalendars()) {
+            result.append("\t").append(c.toString()).append("\n");
+        }
+
+        return result.toString();
     }
 
 }

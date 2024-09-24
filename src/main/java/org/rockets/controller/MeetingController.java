@@ -26,6 +26,7 @@ public class MeetingController {
             this.meetingDAO = new MeetingDAO();
             this.participantDAO = new ParticipantDAO();
             this.attachmentDAO = new AttachmentDAO();
+            this.calendarDAO = new CalendarDAO();
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println(e.getMessage());
         }

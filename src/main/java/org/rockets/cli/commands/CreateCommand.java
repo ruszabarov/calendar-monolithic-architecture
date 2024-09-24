@@ -83,14 +83,12 @@ public class CreateCommand implements Runnable {
                 MeetingController meetingController = new MeetingController("jdbc:sqlite:calendar.db");
                 meetingController.createMeetingWithParticipants(meeting, participantIds);
 
+                System.out.println("Successfully create a meeting (" + meeting.getMeetingId() + ")");
+
+
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-            logger.info("Creating meeting with title = " + title + ", datetime = " + dateTime + ", location = " + location);
-            logger.info("Details: " + details);
-            logger.info("Calendar IDs: " + calendarIds);
-            logger.info("Participant IDs: " + participantIds);
-            logger.info("Attachment IDs: " + attachmentIds);
         }
     }
 
@@ -125,12 +123,12 @@ public class CreateCommand implements Runnable {
                 Calendar calendar = new Calendar(calendarId, title, details);
                 CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
                 calendarController.createCalendarWithMeetingIds(calendar, meetingIds);
+
+                System.out.println("Successfully create a calendar (" + calendar.getCalendarId() + ")");
+
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-            logger.info("Creating calendar with title = " + title);
-            logger.info("Details: " + details);
-            logger.info("Meeting IDs: " + meetingIds);
         }
     }
 
@@ -161,10 +159,10 @@ public class CreateCommand implements Runnable {
                 ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
                 participantController.createParticipant(participant);
 
+                System.out.println("Successfully created participant (" + participant.getParticipantId() + ")");
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-            logger.info("Creating participant with name = " + name + ", email = " + email);
         }
     }
 

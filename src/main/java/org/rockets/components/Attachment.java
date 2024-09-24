@@ -30,4 +30,9 @@ public class Attachment {
     public int hashCode() {
         return Objects.hash(attachmentId);
     }
+
+    @Override
+    public String toString() {
+        return "(Attachment) id: " + getAttachmentId() + " | url: " + getAttachmentUrl();
+    }
 }

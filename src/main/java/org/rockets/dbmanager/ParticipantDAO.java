@@ -1,5 +1,6 @@
 package org.rockets.dbmanager;
 
+import org.rockets.components.Calendar;
 import org.rockets.components.Participant;
 import org.rockets.components.Check;
 
@@ -65,8 +66,10 @@ public class ParticipantDAO {
 
     // Read participants by MeetingId
     public List<Participant> getParticipantsByMeetingId(String meetingId) throws SQLException {
-        String sql = "SELECT * FROM MeetingParticipant WHERE MeetingId = ?;";
+        String sql = "SELECT Participants.* FROM Participants JOIN MeetingParticipant ON Participants.ParticipantId = MeetingParticipant.ParticipantId WHERE MeetingId = ?;";
+
         List<Participant> participants = new ArrayList<>();
+
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, meetingId);
             try (ResultSet rs = pstmt.executeQuery()) {

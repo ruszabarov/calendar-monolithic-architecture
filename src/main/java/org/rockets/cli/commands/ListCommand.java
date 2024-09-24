@@ -49,12 +49,15 @@ public class ListCommand implements Runnable {
                 if (meetingId != null) {
                     Meeting meeting = mtgController.getMeeting(meetingId);
                     logger.info("Listing details for meeting with UUID = " + meetingId);
-                    logger.info(meeting.toString());
+                    System.out.println(meeting);
+                    System.out.println(meeting.participantsToString());
+                    System.out.println(meeting.attachmentsToString());
+                    System.out.println(meeting.calendarsToString());
                 } else {
                     List<Meeting> meetings = mtgController.getAllMeetings();
                     logger.info("Listing all meetings.");
                     for (Meeting meeting : meetings) {
-                        logger.info(meeting.toString());
+                        System.out.println(meeting);
                     }
                 }
             } catch (Exception e) {
@@ -78,12 +81,12 @@ public class ListCommand implements Runnable {
                 if (calendarId != null) {
                     Calendar calendar = calendarController.getCalendarById(calendarId);
                     logger.info("Listing details for calendar with UUID = " + calendarId);
-                    logger.info(calendar.toString());
+                    System.out.println(calendar.toString());
                 } else {
                     List<Calendar> calendars = calendarController.getAllCalendars();
                     logger.info("Listing all calendar.");
                     for (Calendar calendar : calendars) {
-                        logger.info(calendar.toString());
+                        System.out.println(calendar);
                     }
                 }
             } catch (Exception e) {
@@ -107,12 +110,12 @@ public class ListCommand implements Runnable {
                 if (participantId != null) {
                     Participant participant = participantController.getParticipant(participantId);
                     logger.info("Listing details for participant with UUID = " + participantId);
-                    logger.info(participant.toString());
+                    System.out.println(participant);
                 } else {
                     List<Participant> participants = participantController.getAllParticipants();
                     logger.info("Listing all participants.");
                     for (Participant participant : participants) {
-                        logger.info(participant.toString());
+                        System.out.println(participant);
                     }
                 }
             } catch (Exception e) {
@@ -136,12 +139,12 @@ public class ListCommand implements Runnable {
                 if (attachmentId != null) {
                     Attachment attachment = attachmentController.getAttachment(attachmentId);
                     logger.info("Listing details for attachment with UUID = " + attachmentId);
-                    logger.info(attachment.toString());
+                    System.out.println(attachment);
                 } else {
                     List<Attachment> attachments = attachmentController.getAllAttachments();
                     logger.info("Listing all attachments.");
                     for (Attachment attachment : attachments) {
-                        logger.info(attachment.toString());
+                        System.out.println(attachment);
                     }
                 }
             } catch (Exception e) {
