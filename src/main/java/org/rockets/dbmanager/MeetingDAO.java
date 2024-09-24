@@ -97,6 +97,44 @@ public class MeetingDAO {
         }
     }
 
+    public void addParticipantToMeeting(String meetingId, String participantId) throws SQLException {
+        String sql = "INSERT OR IGNORE INTO MeetingParticipant (MeetingId, ParticipantId) VALUES (?, ?);";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, meetingId);
+            pstmt.setString(2, participantId);
+            pstmt.executeUpdate();
+        }
+    }
+
+
+    public void removeParticipantFromMeeting(String meetingId, String participantId) throws SQLException {
+        String sql = "DELETE FROM MeetingParticipant WHERE MeetingId = ? AND ParticipantId = ?;";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, meetingId);
+            pstmt.setString(2, participantId);
+            pstmt.executeUpdate();
+        }
+    }
+
+    public void addAttachmentToMeeting(String meetingId, String attachmentId) throws SQLException {
+        String sql = "INSERT OR IGNORE INTO MeetingAttachment (MeetingId, AttachmentId) VALUES (?, ?);";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, meetingId);
+            pstmt.setString(2, attachmentId);
+            pstmt.executeUpdate();
+        }
+    }
+
+
+    public void removeAttachmentFromMeeting(String meetingId, String attachmentId) throws SQLException {
+        String sql = "DELETE FROM MeetingAttachment WHERE MeetingId = ? AND AttachmentId = ?;";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, meetingId);
+            pstmt.setString(2, attachmentId);
+            pstmt.executeUpdate();
+        }
+    }
+
     // Close the connection when done
     public void close() throws SQLException {
         if (conn != null && !conn.isClosed()) {

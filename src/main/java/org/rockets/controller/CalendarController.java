@@ -56,7 +56,53 @@ public class CalendarController {
             calendarDAO.updateCalendar(calendar);
             return calendarDAO.getCalendarById(calendar.getCalendarId().toString());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
         }
+
+        return calendar;
+    }
+
+    public void deleteCalendar(Calendar calendar) {
+        try {
+            calendarDAO.deleteCalendar(calendar.getCalendarId().toString());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public Calendar addMeetingToCalendar(Calendar calendar, Meeting meeting) {
+        try {
+            Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
+
+            if (m == null) {
+                System.err.println("No meeting with id " + meeting.getMeetingId() + " was found!");
+                return calendar;
+            }
+
+            calendarDAO.addMeetingToCalendar(meeting.getMeetingId().toString(), calendar.getCalendarId().toString());
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return calendar;
+    }
+
+    public Calendar removeMeetingFromCalendar(Calendar calendar, Meeting meeting) {
+        try {
+            Calendar c = calendarDAO.getCalendarById(calendar.getCalendarId().toString());
+
+            if (c == null) {
+                System.err.println("Calendar with id " + calendar.getCalendarId() + " was not found!");
+                return calendar;
+            }
+
+            calendarDAO.removeMeetingFromCalendar(meeting.getMeetingId().toString(), calendar.getCalendarId().toString());
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return calendar;
     }
 }
