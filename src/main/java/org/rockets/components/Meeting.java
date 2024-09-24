@@ -13,6 +13,8 @@ public class Meeting {
     private List<Participant> participants;
     private List<Attachment> attachments;
 
+    private List<Calendar> calendars;
+
     public Meeting(UUID uuid) {
         this.meetingId = uuid;
     }
@@ -69,7 +71,7 @@ public class Meeting {
         return participants;
     }
 
-    public void setParticipantIds(List<Participant> participants) {
+    public void setParticipants(List<Participant> participants) {
         this.participants = participants;
     }
 
@@ -77,7 +79,7 @@ public class Meeting {
         return attachments;
     }
 
-    public void setAttachmentIds(List<Attachment> attachments) {
+    public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
     }
 
@@ -103,6 +105,26 @@ public class Meeting {
     // Removes AttachmentId
     public void removeAttachment(Attachment attachment) {
         attachments.remove(attachment);
+    }
+
+    public List<Calendar> getCalendars() {
+        return this.calendars;
+    }
+
+    public void setCalendars(List<Calendar> calendars) {
+        this.calendars = calendars;
+    }
+
+    public void addCalendar(Calendar calendar) {
+        if (!this.calendars.contains(calendar)) {
+            this.calendars.add(calendar);
+        }
+    }
+
+    public void removeCalendar(Calendar calendar) {
+        if (calendar != null) {
+            this.calendars.remove(calendar);
+        }
     }
 
     @Override
