@@ -132,7 +132,7 @@ public class ListCommand implements Runnable {
         @Override
         public void run() {
             try {
-                AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
+                AttachmentController attachmentController = new AttachmentController();
                 if (attachmentId != null) {
                     Attachment attachment = attachmentController.getAttachment(attachmentId);
                     logger.info("Listing details for attachment with UUID = " + attachmentId);

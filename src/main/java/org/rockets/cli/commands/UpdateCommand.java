@@ -253,7 +253,7 @@ public class UpdateCommand implements Runnable {
         @Override
         public void run() {
             try {
-                AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
+                AttachmentController attachmentController = new AttachmentController();
                 Attachment attachment = attachmentController.getAttachment(id);
 
                 if (url == null) {

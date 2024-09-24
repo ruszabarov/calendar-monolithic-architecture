@@ -5,13 +5,14 @@ import org.rockets.dbmanager.MeetingDAO;
 import org.rockets.dbmanager.ParticipantDAO;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ParticipantController {
     private ParticipantDAO participantDAO;
 
     public ParticipantController(String dbUrl) {
         try {
-            this.participantDAO = new ParticipantDAO(dbUrl);
+            this.participantDAO = new ParticipantDAO();
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println(e.getMessage());
         }
@@ -31,6 +32,16 @@ public class ParticipantController {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        return null;
+    }
+
+    public List<Participant> getAllParticipants() {
+        try {
+            return participantDAO.getAllParticipants();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
         return null;
     }
 

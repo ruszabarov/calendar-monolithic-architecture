@@ -35,4 +35,9 @@ public class Participant {
     public int hashCode() {
         return Objects.hash(participantId);
     }
+
+    @Override
+    public String toString() {
+        return "(Participant) id: " + getParticipantId() + " | name: " + getName() + " | email: " + getEmail();
+    }
 }

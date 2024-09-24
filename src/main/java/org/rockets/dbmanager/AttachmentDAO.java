@@ -10,11 +10,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class AttachmentDAO {
-    private Connection conn;
+    private final Connection conn;
 
-    public AttachmentDAO(String dbUrl) throws SQLException, ClassNotFoundException {
-        Class.forName("org.sqlite.JDBC");
-        conn = DriverManager.getConnection(dbUrl);
+    public AttachmentDAO() throws SQLException, ClassNotFoundException {
+        conn = DBInitializer.getConnection();
     }
 
     // Create a new attachment

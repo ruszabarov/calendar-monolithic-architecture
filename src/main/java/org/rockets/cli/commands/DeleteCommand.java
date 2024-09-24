@@ -107,7 +107,7 @@ public class DeleteCommand implements Runnable {
         @Override
         public void run() {
             try {
-                AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
+                AttachmentController attachmentController = new AttachmentController();
                 Attachment attachment = new Attachment(attachmentId,null);
                 attachmentController.deleteAttachment(attachment);
             } catch (Exception e) {

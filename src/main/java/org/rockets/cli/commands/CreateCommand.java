@@ -61,7 +61,7 @@ public class CreateCommand implements Runnable {
         @Option(names = "--calendarIds", description = "List of calendar IDs associated with the meeting", split = ",")
         private List<String> calendarIds;
 
-        @Option(names = "--participantIds", description = "List of participant IDs for the meeting", split = ",")
+        @Option(names = "--participantIds", description = "List of participant IDs for the meeting", split = ",", required = true)
         private List<String> participantIds;
 
         @Option(names = "--attachmentIds", description = "List of attachment IDs for the meeting", split = ",")
@@ -74,10 +74,6 @@ public class CreateCommand implements Runnable {
                 title = Check.limitString(title,2000);
                 if (!Check.validateDateTime(dateTime)) {
                     logger.error("Invalid Date Time: " + dateTime);
-                    return;
-                }
-                if (participantIds == null || participantIds.isEmpty()) {
-                    logger.error("Participant IDs is empty");
                     return;
                 }
                 location = Check.limitString(location,2000);
@@ -146,9 +142,6 @@ public class CreateCommand implements Runnable {
         @Option(names = "--participantId", description = "UUID for the participant (optional)")
         private UUID participantId;
 
-        @Option(names = "--meetingId", description = "Meeting ID associated with the participant", required = true)
-        private String meetingId;
-
         @Option(names = "--name", description = "Name of the participant (up to 600 characters)", required = true)
         private String name;
 
@@ -171,7 +164,7 @@ public class CreateCommand implements Runnable {
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-            logger.info("Creating participant with name = " + name + ", email = " + email + ", meetingId = " + meetingId);
+            logger.info("Creating participant with name = " + name + ", email = " + email);
         }
     }
 
@@ -198,7 +191,7 @@ public class CreateCommand implements Runnable {
             }
             try {
                 Attachment attachment = new Attachment(attachmentId, url);
-                AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
+                AttachmentController attachmentController = new AttachmentController();
                 attachmentController.createAttachment(attachment);
 
             } catch (Exception e) {

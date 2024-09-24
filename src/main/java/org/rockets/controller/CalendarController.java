@@ -15,10 +15,8 @@ public class CalendarController {
 
     public CalendarController(String dbUrl) {
         try {
-            calendarDAO = new CalendarDAO(dbUrl);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+            calendarDAO = new CalendarDAO();
+        } catch (SQLException | ClassNotFoundException e) {
             System.err.println(e.getMessage());
         }
     }
@@ -44,6 +42,16 @@ public class CalendarController {
     public Calendar getCalendarById(UUID id) {
         try {
             return calendarDAO.getCalendarById(id.toString());
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    public List<Calendar> getAllCalendars() {
+        try {
+            return calendarDAO.getAllCalendars();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }

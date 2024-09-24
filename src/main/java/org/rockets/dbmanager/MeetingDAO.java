@@ -9,9 +9,8 @@ import java.util.UUID;
 public class MeetingDAO {
     private final Connection conn;
 
-    public MeetingDAO(String dbUrl) throws SQLException, ClassNotFoundException {
-        Class.forName("org.sqlite.JDBC");
-        conn = DriverManager.getConnection(dbUrl);
+    public MeetingDAO() throws SQLException, ClassNotFoundException {
+        conn = DBInitializer.getConnection();
     }
 
     // Create a new meeting

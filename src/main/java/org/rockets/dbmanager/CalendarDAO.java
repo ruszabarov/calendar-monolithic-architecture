@@ -1,7 +1,6 @@
 package org.rockets.dbmanager;
 
 import org.rockets.components.Calendar;
-import org.rockets.components.Meeting;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,11 +10,8 @@ import java.util.UUID;
 public class CalendarDAO {
     private final Connection conn;
 
-    public CalendarDAO(String dbUrl) throws SQLException, ClassNotFoundException {
-        // Load the SQLite JDBC driver
-        Class.forName("org.sqlite.JDBC");
-        // Initialize the database connection
-        conn = DriverManager.getConnection(dbUrl);
+    public CalendarDAO() throws SQLException, ClassNotFoundException {
+        conn = DBInitializer.getConnection();
     }
 
     // Create a new calendar

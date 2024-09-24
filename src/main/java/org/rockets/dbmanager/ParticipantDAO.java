@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class ParticipantDAO {
-    private Connection conn;
+    private final Connection conn;
 
-    public ParticipantDAO(String dbUrl) throws SQLException, ClassNotFoundException {
-        Class.forName("org.sqlite.JDBC");
-        conn = DriverManager.getConnection(dbUrl);
+    public ParticipantDAO() throws SQLException, ClassNotFoundException {
+        conn = DBInitializer.getConnection();
     }
 
     // Create a new participant with validations
