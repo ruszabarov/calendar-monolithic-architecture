@@ -167,7 +167,7 @@ public class CreateCommand implements Runnable {
             // TODO: Add validations from Check.java
             try {
                 // TODO: Uncomment when AttachmentDAO is implemented
-                Attachment attachment = new Attachment(attachmentId, meetingId, url);
+                Attachment attachment = new Attachment(attachmentId, url);
                 //AttachmentDAO attachmentDAO = new AttachmentDAO("jdbc:sqlite:calendar.db");
                 //attachmentDAO.createAttachment(attachment);
             } catch (Exception e) {
