@@ -2,8 +2,7 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
-import org.rockets.controller.CalendarController;
-import org.rockets.controller.MeetingController;
+import org.rockets.dbmanager.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -74,7 +73,6 @@ public class UpdateCommand implements Runnable {
 
         @Override
         public void run() {
-            // TODO: Add validations from Check.java
             // Check at least one option is provided
             if (title == null && dateTime == null && location == null && details == null &&
                     addCalendarId == null && removeCalendarId == null &&
@@ -83,13 +81,38 @@ public class UpdateCommand implements Runnable {
                 logger.error("At least one update option must be specified.");
                 return;
             }
-
-            MeetingController meetingController = new MeetingController("jdbc:sqlite:calendar.db");
-
-            Meeting meeting = new Meeting(UUID.fromString(id), title, dateTime, location, details);
-
-            meetingController.updateMeeting(meeting);
-
+            try {
+                MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
+                Meeting meeting = mtgController.getMeetingById(id);
+                if (title != null){
+                    title = Check.limitString(title,2000);
+                    meeting.setTitle(title);
+                }
+                if (dateTime != null) {
+                    if (!Check.validateDateTime(dateTime)) {
+                        logger.error("Invalid date format");
+                        return;
+                    }
+                    meeting.setDateTime(dateTime);
+                }
+                if (location != null) {
+                    Check.limitString(location,2000);
+                    meeting.setLocation(location);
+                }
+                if (details != null) {
+                    Check.limitString(details,10000);
+                    meeting.setDetails(details);
+                }
+                if (addCalendarId != null) meeting.addCalendarId(addCalendarId);
+                if (removeCalendarId != null) meeting.removeCalendarId(removeCalendarId);
+                if (addParticipantId != null) meeting.addParticipantId(addParticipantId);
+                if (removeParticipantId != null) meeting.removeParticipantId(removeParticipantId);
+                if (addAttachmentId != null) meeting.addAttachmentId(addAttachmentId);
+                if (removeAttachmentId != null) meeting.removeAttachmentId(removeAttachmentId);
+                mtgController.updateMeeting(meeting);
+            } catch (Exception e) {
+                System.err.println("An error occurred: " + e.getMessage());
+            }
             logger.info("Updating meeting with ID = " + id);
             // Implement update logic here
         }
@@ -117,26 +140,33 @@ public class UpdateCommand implements Runnable {
 
         @Override
         public void run() {
-            // TODO: Add validations from Check.java
             // Check at least one option is provided
             try {
+                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
+                Calendar calendar = calendarController.getCalendarById(id);
+
                 // Check if at least one update option is specified
                 if (title == null && details == null && addMeetingId == null && removeMeetingId == null) {
                     logger.error("At least one update option must be specified.");
                     return;
                 }
 
-                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
-                Calendar calendar = new Calendar(UUID.fromString(id), title, details);
-
+                // Apply updates to the calendar
+                if (title != null) {
+                    Check.limitString(title,2000);
+                    calendar.setTitle(title);
+                }
+                if (details != null) {
+                    Check.limitString(details,10000);
+                    calendar.setDetails(details);
+                }
+                if (addMeetingId != null) calendar.addMeetingId(addMeetingId);
+                if (removeMeetingId != null) calendar.removeMeetingId(removeMeetingId);
+                logger.info("Updating calendar with ID = " + id);
                 calendarController.updateCalendar(calendar);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-
-
-            logger.info("Updating calendar with ID = " + id);
-            // Implement update logic here
         }
     }
 
@@ -156,22 +186,31 @@ public class UpdateCommand implements Runnable {
 
         @Override
         public void run() {
-            // TODO: Add validations from Check.java
-            // TODO: Uncomment when implemented
+            ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
+            Participant participant = participantController.getParticipantById(id);
+            if (name == null && email == null ) {
+                logger.error("At least one update option must be specified.");
+                return;
+            }
+            if (name != null) {
+                Check.limitString(name,600);
+                participant.setName(name);
+            }
+            if (email != null) {
+                if (!Check.isValidEmail(email)) {
+                    logger.error("Invalid URL");
+                    return;
+                }
+                participant.setEmail(email);
+            }
             try {
-                //ParticipantDAO participantDAO = new ParticipantDAO("jdbc:sqlite:calendar.db");
-                //Participant participant = participantDAO.getParticipantById(id);
-
-                //if (name != null) participant.setName(name);
-                //if (email != null) participant.setEmail(email);
-
-                //participantDAO.updateParticipant(participant);
+                if (name != null) participant.setName(name);
+                if (email != null) participant.setEmail(email);
+                logger.info("Updating participant with ID = " + id);
+                participantController.updateParticipant(participant);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-
-            logger.info("Updating participant with ID = " + id);
-            // Implement update logic here
         }
     }
 
@@ -188,26 +227,24 @@ public class UpdateCommand implements Runnable {
 
         @Override
         public void run() {
-            // TODO: Add validations from Check.java
-            // TODO: Uncomment when implemented
-            if (url == null) {
-                logger.error("At least one update option must be specified.");
-                return;
-            }
-
             try {
-                //AttachmentDAO attachmentDAO = new AttachmentDAO("jdbc:sqlite:calendar.db");
-                //Attachment attachment = attachmentDAO.getAttachmentById(id);
+                AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
+                Attachment attachment = attachmentController.getAttachmentById(id);
 
-                //if (url != null) attachment.setUrl(url);
-
-                //attachmentDAO.updateAttachment(attachment);
+                if (url == null) {
+                    logger.error("At least one update option must be specified.");
+                    return;
+                }
+                if (!Check.isValidURL(url)) {
+                    logger.error("Invalid URL");
+                    return;
+                }
+                attachment.setUrl(url);
+                logger.info("Updating attachment with ID = " + id);
+                attachmentController.updateAttachment(attachment);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
-
-            logger.info("Updating attachment with ID = " + id);
-            // Implement update logic here
         }
     }
 }

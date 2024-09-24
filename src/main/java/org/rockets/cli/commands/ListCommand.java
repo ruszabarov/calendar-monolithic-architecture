@@ -2,12 +2,14 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
-import org.rockets.dbmanager.*;
+import org.rockets.controller.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
+
+import java.util.List;
 
 @Command(
         name = "list",
@@ -42,13 +44,17 @@ public class ListCommand implements Runnable {
         @Override
         public void run() {
             try {
-                MeetingDAO mtgDAO = new MeetingDAO("jdbc:sqlite:calendar.db");
+                MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
                 if (meetingId != null) {
-                    mtgDAO.getMeetingById(meetingId);
+                    Meeting meeting = mtgController.getMeetingById(meetingId);
                     logger.info("Listing details for meeting with UUID = " + meetingId);
+                    logger.info(meeting.toString());
                 } else {
-                    mtgDAO.getAllMeetings();
+                    List<Meeting> meetings = mtgController.getAllMeetings();
                     logger.info("Listing all meetings.");
+                    for (Meeting meeting : meetings) {
+                        logger.info(meeting.toString());
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
@@ -67,13 +73,17 @@ public class ListCommand implements Runnable {
         @Override
         public void run() {
             try {
-                CalendarDAO calendarDAO = new CalendarDAO("jdbc:sqlite:calendar.db");
+                CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
                 if (calendarId != null) {
-                    calendarDAO.getCalendarById(calendarId);
+                    Calendar calendar = calendarController.getCalendarById(calendarId);
                     logger.info("Listing details for calendar with UUID = " + calendarId);
+                    logger.info(calendar.toString());
                 } else {
-                    calendarDAO.getAllCalendars();
+                    List<Calendar> calendars = calendarController.getAllCalendars();
                     logger.info("Listing all calendar.");
+                    for (Calendar calendar : calendars) {
+                        logger.info(calendar.toString());
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
@@ -91,15 +101,18 @@ public class ListCommand implements Runnable {
 
         @Override
         public void run() {
-            // TODO: Uncomment when ParticipantDAO is implemented
             try {
-                //ParticipantDAO participantDAO = new ParticipantDAO("jdbc:sqlite:calendar.db");
+                ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
                 if (participantId != null) {
-                    //participantDAO.getParticipantById(participantId);
+                    Participant participant = participantController.getParticipantById(participantId);
                     logger.info("Listing details for participant with UUID = " + participantId);
+                    logger.info(participant.toString());
                 } else {
-                    //participantDAO.getAllParticipants();
+                    List<Participant> participants = participantController.getAllParticipants();
                     logger.info("Listing all participants.");
+                    for (Participant participant : participants) {
+                        logger.info(participant.toString());
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
@@ -117,15 +130,18 @@ public class ListCommand implements Runnable {
 
         @Override
         public void run() {
-            // TODO: Uncomment when AttachmentDAO is implemented
             try {
-                // AttachmentDAO attachmentDAO = new AttachmentDAO("jdbc:sqlite:calendar.db");
+                AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
                 if (attachmentId != null) {
-                    // attachmentDAO.getAttachmentById(attachmentId);
+                    Attachment attachment = attachmentController.getAttachmentById(attachmentId);
                     logger.info("Listing details for attachment with UUID = " + attachmentId);
+                    logger.info(attachment.toString());
                 } else {
-                    // attachmentDAO.getAllAttachments();
+                    List<Attachment> attachments = attachmentController.getAllAttachments();
                     logger.info("Listing all attachments.");
+                    for (Attachment attachment : attachments) {
+                        logger.info(attachment.toString());
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
