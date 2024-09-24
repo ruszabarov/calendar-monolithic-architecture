@@ -32,7 +32,7 @@ public class CalendarDAO {
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Calendar calendar = new Calendar(UUID.fromString(rs.getString("CalendarId")), rs.getString("Title"), rs.getString("CalendarDetails"));
+                Calendar calendar = new Calendar(UUID.fromString(rs.getString("CalendarId")), rs.getString("Title"), rs.getString("Details"));
                 calendars.add(calendar);
             }
         }
@@ -46,7 +46,7 @@ public class CalendarDAO {
             pstmt.setString(1, calendarId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Calendar(UUID.fromString(rs.getString("CalendarId")), rs.getString("Title"), rs.getString("CalendarDetails"));
+                    return new Calendar(UUID.fromString(rs.getString("CalendarId")), rs.getString("Title"), rs.getString("Details"));
                 } else {
                     return null;
                 }

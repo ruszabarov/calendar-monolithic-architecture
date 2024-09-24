@@ -16,6 +16,7 @@ public class CalendarController {
     public CalendarController(String dbUrl) {
         try {
             calendarDAO = new CalendarDAO();
+            meetingDAO = new MeetingDAO();
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println(e.getMessage());
         }
@@ -31,13 +32,21 @@ public class CalendarController {
                 throw new SQLException("Meeting with id " + meetingId + " does not exist!");
             }
 
-            calendarDAO.addMeetingToCalendar(calendar.getCalendarId().toString(), meetingId);
+            calendarDAO.addMeetingToCalendar(meetingId, calendar.getCalendarId().toString());
         }
 
     }
 
     public Calendar getCalendarById(UUID id) throws SQLException {
-        return calendarDAO.getCalendarById(id.toString());
+        Calendar calendar = calendarDAO.getCalendarById(id.toString());
+
+        if (calendar == null) {
+            throw new SQLException("Calendar with id " + id + " does not exist");
+        }
+
+        calendar.setMeetings(meetingDAO.getMeetingsByCalendarId(id.toString()));
+
+        return calendar;
     }
 
     public List<Calendar> getAllCalendars() throws SQLException {
@@ -53,6 +62,12 @@ public class CalendarController {
     }
 
     public void addMeetingToCalendar(Calendar calendar, Meeting meeting) throws SQLException {
+        Calendar c = calendarDAO.getCalendarById(calendar.getCalendarId().toString());
+
+        if (c == null) {
+            throw new SQLException("No calendar with id " + calendar.getCalendarId() + " was found!");
+        }
+
         Meeting m = meetingDAO.getMeetingById(meeting.getMeetingId().toString());
 
         if (m == null) {

@@ -1,16 +1,15 @@
 package org.rockets.components;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Calendar {
     private UUID calendarId;
     private String title;
     private String details;
-    private List<Meeting> meetings  = new ArrayList<>();
+    private List<Meeting> meetings = new ArrayList<>();
 
     public Calendar(UUID calendarId, String title, String details) {
         this.calendarId = calendarId;
@@ -18,18 +17,34 @@ public class Calendar {
         this.details = details;
     }
 
-    public UUID getCalendarId() { return calendarId; }
-    public void setCalendarId(UUID calendarId) { this.calendarId = calendarId; }
+    public UUID getCalendarId() {
+        return calendarId;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setCalendarId(UUID calendarId) {
+        this.calendarId = calendarId;
+    }
 
-    public String getDetails() { return details; }
-    public void setDetails(String details) { this.details = details; }
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
 
     public List<Meeting> getMeetings() {
         return this.meetings;
     }
+
     public void setMeetings(List<Meeting> meetings) {
         this.meetings = meetings;
     }
@@ -61,8 +76,11 @@ public class Calendar {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("(Calendar) id: " + getCalendarId() + " | title: " + getTitle()
-                + " | details: " + getDetails() + "\nMeetings:\n");
+        return "(Calendar) id: " + getCalendarId() + " | title: " + getTitle() + " | details: " + getDetails();
+    }
+
+    public String meetingsToString() {
+        StringBuilder result = new StringBuilder("Meetings:\n");
 
         for (Meeting m : getMeetings()) {
             result.append("\t").append(m.toString()).append("\n");

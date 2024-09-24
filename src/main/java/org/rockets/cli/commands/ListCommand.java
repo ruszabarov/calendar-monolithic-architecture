@@ -1,8 +1,14 @@
 package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
-import org.rockets.components.*;
-import org.rockets.controller.*;
+import org.rockets.components.Attachment;
+import org.rockets.components.Calendar;
+import org.rockets.components.Meeting;
+import org.rockets.components.Participant;
+import org.rockets.controller.AttachmentController;
+import org.rockets.controller.CalendarController;
+import org.rockets.controller.MeetingController;
+import org.rockets.controller.ParticipantController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -81,7 +87,8 @@ public class ListCommand implements Runnable {
                 if (calendarId != null) {
                     Calendar calendar = calendarController.getCalendarById(calendarId);
                     logger.info("Listing details for calendar with UUID = " + calendarId);
-                    System.out.println(calendar.toString());
+                    System.out.println(calendar);
+                    System.out.println(calendar.meetingsToString());
                 } else {
                     List<Calendar> calendars = calendarController.getAllCalendars();
                     logger.info("Listing all calendar.");

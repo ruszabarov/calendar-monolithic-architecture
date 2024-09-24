@@ -21,9 +21,18 @@ public class AttachmentController {
         }
     }
 
-    public void createAttachmentWithMeeting(Attachment attachment, Meeting meeting) throws SQLException {
+    public void createAttachmentWithMeetingIds(Attachment attachment, List<String> meetingIds) throws SQLException {
         this.attachmentDAO.createAttachment(attachment);
-        addAttachmentToMeeting(meeting, attachment);
+
+        for (String meetingId : meetingIds) {
+            Meeting m = meetingDAO.getMeetingById(meetingId);
+
+            if (m == null) {
+                throw new SQLException("Meeting with id " + meetingId + " was not found!");
+            }
+
+            meetingDAO.addAttachmentToMeeting(meetingId, attachment.getAttachmentId().toString());
+        }
     }
 
     public void addAttachmentToMeeting(Meeting meeting, Attachment attachment) throws SQLException {

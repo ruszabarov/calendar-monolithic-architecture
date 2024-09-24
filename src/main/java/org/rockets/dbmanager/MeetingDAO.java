@@ -1,6 +1,7 @@
 package org.rockets.dbmanager;
-import org.rockets.components.Calendar;
+
 import org.rockets.components.Meeting;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class MeetingDAO {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Meeting meeting = new Meeting(UUID.fromString(rs.getString("Meetings.MeetingId")), rs.getString("Meetings.Title"), rs.getString("Meetings.DateTime"), rs.getString("Meetings.Location"), rs.getString("Meetings.Details"));
+                    Meeting meeting = new Meeting(UUID.fromString(rs.getString("MeetingId")), rs.getString("Title"), rs.getString("DateTime"), rs.getString("Location"), rs.getString("Details"));
                     meetings.add(meeting);
                 }
             }

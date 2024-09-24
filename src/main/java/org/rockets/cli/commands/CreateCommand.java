@@ -2,19 +2,18 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
-import org.rockets.controller.*;
+import org.rockets.controller.AttachmentController;
+import org.rockets.controller.CalendarController;
+import org.rockets.controller.MeetingController;
+import org.rockets.controller.ParticipantController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Mixin;
+import picocli.CommandLine.Option;
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import org.rockets.dbmanager.*;
 
 @Command(
         name = "create",
@@ -71,13 +70,13 @@ public class CreateCommand implements Runnable {
         public void run() {
             try {
                 if (meetingId == null) meetingId = UUID.fromString(Check.generate(null).toString());
-                title = Check.limitString(title,2000);
+                title = Check.limitString(title, 2000);
                 if (!Check.validateDateTime(dateTime)) {
                     logger.error("Invalid Date Time: " + dateTime);
                     return;
                 }
-                location = Check.limitString(location,2000);
-                details = Check.limitString(details,10000);
+                location = Check.limitString(location, 2000);
+                details = Check.limitString(details, 10000);
 
                 Meeting meeting = new Meeting(meetingId, title, dateTime, location, details);
                 MeetingController meetingController = new MeetingController();
@@ -114,8 +113,8 @@ public class CreateCommand implements Runnable {
 
             try {
                 if (calendarId == null) calendarId = UUID.fromString(Check.generate(null).toString());
-                title = Check.limitString(title,2000);
-                details = Check.limitString(details,10000);
+                title = Check.limitString(title, 2000);
+                details = Check.limitString(details, 10000);
                 if (meetingIds == null || meetingIds.isEmpty()) {
                     logger.error("Meeting IDs is empty");
                     return;
@@ -149,7 +148,7 @@ public class CreateCommand implements Runnable {
         @Override
         public void run() {
             if (participantId == null) participantId = UUID.fromString(Check.generate(null).toString());
-            name = Check.limitString(name,600);
+            name = Check.limitString(name, 600);
             if (!Check.isValidEmail(email)) {
                 logger.error("Invalid: " + email);
                 return;
@@ -174,8 +173,8 @@ public class CreateCommand implements Runnable {
         @Option(names = "--attachmentId", description = "UUID for the attachment (optional)")
         private UUID attachmentId;
 
-        @Option(names = "--meetingId", description = "Meeting ID associated with the attachment", required = true)
-        private String meetingId;
+        @Option(names = "--meetingIds", description = "List of meeting IDs associated with the attachment", split = ",")
+        private List<String> meetingIds;
 
         @Option(names = "--url", description = "URL of the attachment", required = true)
         private String url;
@@ -191,9 +190,7 @@ public class CreateCommand implements Runnable {
                 Attachment attachment = new Attachment(attachmentId, url);
                 AttachmentController attachmentController = new AttachmentController();
 
-                Meeting meeting = new Meeting(UUID.fromString(meetingId));
-
-                attachmentController.createAttachmentWithMeeting(attachment, meeting);
+                attachmentController.createAttachmentWithMeetingIds(attachment, meetingIds);
 
                 System.out.println("Successfully created an attachment (" + attachment.getAttachmentId() + ")");
 
