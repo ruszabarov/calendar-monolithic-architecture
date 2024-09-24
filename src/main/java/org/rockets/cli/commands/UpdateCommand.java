@@ -103,8 +103,14 @@ public class UpdateCommand implements Runnable {
                     Check.limitString(details,10000);
                     meeting.setDetails(details);
                 }
-                if (addCalendarId != null) meeting.addCalendar(addCalendarId);
-                if (removeCalendarId != null) meeting.removeCalendar(removeCalendarId);
+                if (addCalendarId != null) {
+                    Calendar calendar = new Calendar(addCalendarId,null,null);
+                    meeting.addCalendar(calendar);
+                }
+                if (removeCalendarId != null) {
+                    Calendar calendar = new Calendar(removeCalendarId,null,null);
+                    meeting.removeCalendar(calendar);
+                }
                 if (addParticipantId != null) {
                     Participant participant = new Participant(addParticipantId,null,null);
                     meeting.addParticipant(participant);
