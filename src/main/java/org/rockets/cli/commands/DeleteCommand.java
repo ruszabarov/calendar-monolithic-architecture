@@ -39,13 +39,14 @@ public class DeleteCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(DeleteMeetingCommand.class);
 
         @Option(names = "--meetingId", description = "UUID of the meeting to delete", required = true)
-        private String meetingId;
+        private UUID meetingId;
 
         @Override
         public void run() {
             try {
                 MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
-                mtgController.deleteMeeting(meetingId);
+                Meeting meeting = new Meeting(meetingId);
+                mtgController.deleteMeeting(meeting);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -59,13 +60,14 @@ public class DeleteCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(DeleteCalendarCommand.class);
 
         @Option(names = "--calendarId", description = "UUID of the calendar to delete", required = true)
-        private String calendarId;
+        private UUID calendarId;
 
         @Override
         public void run() {
             try {
                 CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
-                calendarController.deleteCalendar(calendarId);
+                Calendar calendar = new Calendar(calendarId, null, null);
+                calendarController.deleteCalendar(calendar);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -79,13 +81,14 @@ public class DeleteCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(DeleteParticipantCommand.class);
 
         @Option(names = "--participantId", description = "UUID of the participant to delete", required = true)
-        private String participantId;
+        private UUID participantId;
 
         @Override
         public void run() {
             try {
-                ParticipantController participantController = new Participant("jdbc:sqlite:calendar.db");
-                participantController.deleteParticipant(participantId);
+                ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
+                Participant participant = new Participant(participantId,null,null);
+                participantController.deleteParticipant(participant);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -99,13 +102,14 @@ public class DeleteCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(DeleteAttachmentCommand.class);
 
         @Option(names = "--attachmentId", description = "UUID of the attachment to delete", required = true)
-        private String attachmentId;
+        private UUID attachmentId;
 
         @Override
         public void run() {
             try {
                 AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
-                attachmentController.deleteParticipant(attachmentId);
+                Attachment attachment = new Attachment(attachmentId,null);
+                attachmentController.deleteAttachment(attachment);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }

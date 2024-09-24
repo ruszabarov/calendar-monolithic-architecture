@@ -2,7 +2,7 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
-import org.rockets.dbmanager.*;
+import org.rockets.controller.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -83,7 +83,7 @@ public class UpdateCommand implements Runnable {
             }
             try {
                 MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
-                Meeting meeting = mtgController.getMeetingById(id);
+                Meeting meeting = mtgController.getMeeting(id);
                 if (title != null){
                     title = Check.limitString(title,2000);
                     meeting.setTitle(title);
@@ -103,12 +103,25 @@ public class UpdateCommand implements Runnable {
                     Check.limitString(details,10000);
                     meeting.setDetails(details);
                 }
-                if (addCalendarId != null) meeting.addCalendarId(addCalendarId);
-                if (removeCalendarId != null) meeting.removeCalendarId(removeCalendarId);
-                if (addParticipantId != null) meeting.addParticipantId(addParticipantId);
-                if (removeParticipantId != null) meeting.removeParticipantId(removeParticipantId);
-                if (addAttachmentId != null) meeting.addAttachmentId(addAttachmentId);
-                if (removeAttachmentId != null) meeting.removeAttachmentId(removeAttachmentId);
+                if (addCalendarId != null) meeting.addCalendar(addCalendarId);
+                if (removeCalendarId != null) meeting.removeCalendar(removeCalendarId);
+                if (addParticipantId != null) {
+                    Participant participant = new Participant(addParticipantId,null,null);
+                    meeting.addParticipant(participant);
+                }
+                if (removeParticipantId != null) {
+                    Participant participant = new Participant(removeParticipantId,null,null);
+                    meeting.addParticipant(participant);
+                    meeting.removeParticipant(participant);
+                }
+                if (addAttachmentId != null) {
+                    Attachment attachment = new Attachment(addAttachmentId, null);
+                    meeting.addAttachment(attachment);
+                }
+                if (removeAttachmentId != null) {
+                    Attachment attachment = new Attachment(removeAttachmentId, null);
+                    meeting.removeAttachment(attachment);
+                }
                 mtgController.updateMeeting(meeting);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
@@ -124,7 +137,7 @@ public class UpdateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(UpdateCalendarCommand.class);
 
         @Option(names = "-id", description = "Calendar ID", required = true)
-        private String id;
+        private UUID id;
 
         @Option(names = "-title", description = "New calendar title")
         private String title;
@@ -160,8 +173,14 @@ public class UpdateCommand implements Runnable {
                     Check.limitString(details,10000);
                     calendar.setDetails(details);
                 }
-                if (addMeetingId != null) calendar.addMeetingId(addMeetingId);
-                if (removeMeetingId != null) calendar.removeMeetingId(removeMeetingId);
+                if (addMeetingId != null) {
+                    Meeting meeting = new Meeting(addMeetingId);
+                    calendar.addMeeting(meeting);
+                }
+                if (removeMeetingId != null){
+                    Meeting meeting = new Meeting(removeMeetingId);
+                    calendar.removeMeeting(meeting);
+                }
                 logger.info("Updating calendar with ID = " + id);
                 calendarController.updateCalendar(calendar);
             } catch (Exception e) {
@@ -187,7 +206,7 @@ public class UpdateCommand implements Runnable {
         @Override
         public void run() {
             ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
-            Participant participant = participantController.getParticipantById(id);
+            Participant participant = participantController.getParticipant(id);
             if (name == null && email == null ) {
                 logger.error("At least one update option must be specified.");
                 return;
@@ -229,7 +248,7 @@ public class UpdateCommand implements Runnable {
         public void run() {
             try {
                 AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
-                Attachment attachment = attachmentController.getAttachmentById(id);
+                Attachment attachment = attachmentController.getAttachment(id);
 
                 if (url == null) {
                     logger.error("At least one update option must be specified.");
@@ -239,7 +258,7 @@ public class UpdateCommand implements Runnable {
                     logger.error("Invalid URL");
                     return;
                 }
-                attachment.setUrl(url);
+                attachment.setAttachmentUrl(url);
                 logger.info("Updating attachment with ID = " + id);
                 attachmentController.updateAttachment(attachment);
             } catch (Exception e) {

@@ -2,8 +2,7 @@ package org.rockets.cli.commands;
 
 import org.rockets.cli.common.HelpOption;
 import org.rockets.components.*;
-import org.rockets.controller.CalendarController;
-import org.rockets.controller.MeetingController;
+import org.rockets.controller.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
@@ -45,7 +44,7 @@ public class CreateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(CreateMeetingCommand.class);
 
         @Option(names = "--meetingId", description = "UUID for the meeting (optional)")
-        private String meetingId;
+        private UUID meetingId;
 
         @Option(names = "--title", description = "Title of the meeting (up to 2000 characters)", required = true)
         private String title;
@@ -71,7 +70,7 @@ public class CreateCommand implements Runnable {
         @Override
         public void run() {
             try {
-                if (meetingId == null) meetingId = Check.generate(null).toString();
+                if (meetingId == null) meetingId = UUID.fromString(Check.generate(null).toString());
                 title = Check.limitString(title,2000);
                 if (!Check.validateDateTime(dateTime)) {
                     logger.error("Invalid Date Time: " + dateTime);
@@ -84,9 +83,9 @@ public class CreateCommand implements Runnable {
                 location = Check.limitString(location,2000);
                 details = Check.limitString(details,10000);
 
-                Meeting meeting = new Meeting(meetingId, title, dateTime, location, details, calendarIds, participantIds, attachmentIds);
+                Meeting meeting = new Meeting(meetingId, title, dateTime, location, details);
                 MeetingController meetingController = new MeetingController("jdbc:sqlite:calendar.db");
-                meetingController.createMeeting(meeting);
+                meetingController.createMeetingWithParticipants(meeting, participantIds);
 
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
@@ -105,7 +104,7 @@ public class CreateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(CreateCalendarCommand.class);
 
         @Option(names = "--calendarId", description = "UUID for the calendar (optional)")
-        private String calendarId;
+        private UUID calendarId;
 
         @Option(names = "--title", description = "Title of the calendar (up to 2000 characters)", required = true)
         private String title;
@@ -120,16 +119,16 @@ public class CreateCommand implements Runnable {
         public void run() {
 
             try {
-                if (calendarId == null) calendarId = Check.generate(null).toString();
+                if (calendarId == null) calendarId = UUID.fromString(Check.generate(null).toString());
                 title = Check.limitString(title,2000);
                 details = Check.limitString(details,10000);
                 if (meetingIds == null || meetingIds.isEmpty()) {
                     logger.error("Meeting IDs is empty");
                     return;
                 }
-                Calendar calendar = new Calendar(calendarId, title, details, meetingIds);
+                Calendar calendar = new Calendar(calendarId, title, details);
                 CalendarController calendarController = new CalendarController("jdbc:sqlite:calendar.db");
-                calendarController.createCalendarWithMeetingIds(calendar);
+                calendarController.createCalendarWithMeetingIds(calendar, meetingIds);
             } catch (Exception e) {
                 System.err.println("An error occurred: " + e.getMessage());
             }
@@ -145,7 +144,7 @@ public class CreateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(CreateParticipantCommand.class);
 
         @Option(names = "--participantId", description = "UUID for the participant (optional)")
-        private String participantId;
+        private UUID participantId;
 
         @Option(names = "--meetingId", description = "Meeting ID associated with the participant", required = true)
         private String meetingId;
@@ -158,14 +157,14 @@ public class CreateCommand implements Runnable {
 
         @Override
         public void run() {
-            if (participantId == null) participantId = Check.generate(null).toString();
+            if (participantId == null) participantId = UUID.fromString(Check.generate(null).toString());
             name = Check.limitString(name,600);
             if (!Check.isValidEmail(email)) {
                 logger.error("Invalid: " + email);
                 return;
             }
             try {
-                Participant participant = new Participant(participantId, meetingId, name, email);
+                Participant participant = new Participant(participantId, name, email);
                 ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
                 participantController.createParticipant(participant);
 
@@ -182,7 +181,7 @@ public class CreateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(CreateAttachmentCommand.class);
 
         @Option(names = "--attachmentId", description = "UUID for the attachment (optional)")
-        private String attachmentId;
+        private UUID attachmentId;
 
         @Option(names = "--meetingId", description = "Meeting ID associated with the attachment", required = true)
         private String meetingId;
@@ -192,13 +191,13 @@ public class CreateCommand implements Runnable {
 
         @Override
         public void run() {
-            if (attachmentId == null) attachmentId = Check.generate(null).toString();
+            if (attachmentId == null) attachmentId = UUID.fromString(Check.generate(null).toString());
             if (!Check.isValidURL(url)) {
                 logger.error("Invalid URL: " + url);
                 return;
             }
             try {
-                Attachment attachment = new Attachment(attachmentId, meetingId, url);
+                Attachment attachment = new Attachment(attachmentId, url);
                 AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
                 attachmentController.createAttachment(attachment);
 

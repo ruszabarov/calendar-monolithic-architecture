@@ -10,6 +10,7 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
 import java.util.List;
+import java.util.UUID;
 
 @Command(
         name = "list",
@@ -46,7 +47,7 @@ public class ListCommand implements Runnable {
             try {
                 MeetingController mtgController = new MeetingController("jdbc:sqlite:calendar.db");
                 if (meetingId != null) {
-                    Meeting meeting = mtgController.getMeetingById(meetingId);
+                    Meeting meeting = mtgController.getMeeting(meetingId);
                     logger.info("Listing details for meeting with UUID = " + meetingId);
                     logger.info(meeting.toString());
                 } else {
@@ -68,7 +69,7 @@ public class ListCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(ListCalendarCommand.class);
 
         @Option(names = "--calendarId", description = "Optional UUID of the calendar to filter")
-        private String calendarId;
+        private UUID calendarId;
 
         @Override
         public void run() {
@@ -104,7 +105,7 @@ public class ListCommand implements Runnable {
             try {
                 ParticipantController participantController = new ParticipantController("jdbc:sqlite:calendar.db");
                 if (participantId != null) {
-                    Participant participant = participantController.getParticipantById(participantId);
+                    Participant participant = participantController.getParticipant(participantId);
                     logger.info("Listing details for participant with UUID = " + participantId);
                     logger.info(participant.toString());
                 } else {
@@ -133,7 +134,7 @@ public class ListCommand implements Runnable {
             try {
                 AttachmentController attachmentController = new AttachmentController("jdbc:sqlite:calendar.db");
                 if (attachmentId != null) {
-                    Attachment attachment = attachmentController.getAttachmentById(attachmentId);
+                    Attachment attachment = attachmentController.getAttachment(attachmentId);
                     logger.info("Listing details for attachment with UUID = " + attachmentId);
                     logger.info(attachment.toString());
                 } else {
