@@ -119,7 +119,7 @@ public class CalendarDAO {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Calendar calendar = new Calendar(UUID.fromString(rs.getString("Calendars.CalendarId")), rs.getString("Meetings.Title"), rs.getString("Meetings.Details"));
+                    Calendar calendar = new Calendar(UUID.fromString(rs.getString("CalendarId")), rs.getString("Title"), rs.getString("Details"));
                     calendars.add(calendar);
                 }
             }
