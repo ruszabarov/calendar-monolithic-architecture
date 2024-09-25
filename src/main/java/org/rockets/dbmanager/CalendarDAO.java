@@ -5,7 +5,6 @@ import org.rockets.components.Calendar;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CalendarDAO {
     private final Connection conn;
@@ -18,7 +17,7 @@ public class CalendarDAO {
     public void createCalendar(Calendar calendar) throws SQLException {
         String sql = "INSERT INTO Calendars (CalendarId, Title, Details) VALUES (?, ?, ?);";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, calendar.getCalendarId().toString());
+            pstmt.setString(1, calendar.getCalendarId());
             pstmt.setString(2, calendar.getTitle());
             pstmt.setString(3, calendar.getDetails());
             pstmt.executeUpdate();
@@ -32,7 +31,7 @@ public class CalendarDAO {
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Calendar calendar = new Calendar(UUID.fromString(rs.getString("CalendarId")), rs.getString("Title"), rs.getString("Details"));
+                Calendar calendar = new Calendar(rs.getString("CalendarId"), rs.getString("Title"), rs.getString("Details"));
                 calendars.add(calendar);
             }
         }
@@ -46,7 +45,7 @@ public class CalendarDAO {
             pstmt.setString(1, calendarId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Calendar(UUID.fromString(rs.getString("CalendarId")), rs.getString("Title"), rs.getString("Details"));
+                    return new Calendar(rs.getString("CalendarId"), rs.getString("Title"), rs.getString("Details"));
                 } else {
                     return null;
                 }
@@ -59,7 +58,7 @@ public class CalendarDAO {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, calendar.getTitle());
             pstmt.setString(2, calendar.getDetails());
-            pstmt.setString(3, calendar.getCalendarId().toString());
+            pstmt.setString(3, calendar.getCalendarId());
             pstmt.executeUpdate();
         }
     }
@@ -119,7 +118,7 @@ public class CalendarDAO {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Calendar calendar = new Calendar(UUID.fromString(rs.getString("CalendarId")), rs.getString("Title"), rs.getString("Details"));
+                    Calendar calendar = new Calendar(rs.getString("CalendarId"), rs.getString("Title"), rs.getString("Details"));
                     calendars.add(calendar);
                 }
             }

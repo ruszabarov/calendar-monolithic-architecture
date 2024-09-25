@@ -16,7 +16,6 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
 import java.util.List;
-import java.util.UUID;
 
 @Command(
         name = "list",
@@ -78,7 +77,7 @@ public class ListCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(ListCalendarCommand.class);
 
         @Option(names = "--calendarId", description = "Optional UUID of the calendar to filter")
-        private UUID calendarId;
+        private String calendarId;
 
         @Override
         public void run() {

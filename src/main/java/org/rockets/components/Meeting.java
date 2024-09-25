@@ -3,10 +3,9 @@ package org.rockets.components;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Meeting {
-    private final UUID meetingId;
+    private final String meetingId;
     private String title;
     private String dateTime;
     private String location;
@@ -18,11 +17,11 @@ public class Meeting {
     private List<Calendar> calendars = new ArrayList<>();
     ;
 
-    public Meeting(UUID uuid) {
+    public Meeting(String uuid) {
         this.meetingId = uuid;
     }
 
-    public Meeting(UUID meetingId, String title, String dateTime, String location, String details) {
+    public Meeting(String meetingId, String title, String dateTime, String location, String details) {
         this(meetingId);
         this.title = title;
         this.dateTime = dateTime;
@@ -30,7 +29,7 @@ public class Meeting {
         this.details = details;
     }
 
-    public UUID getMeetingId() {
+    public String getMeetingId() {
         return meetingId;
     }
 

@@ -15,8 +15,6 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
-import java.util.UUID;
-
 @Command(
         name = "delete",
         description = "Deletes a record by UUID",
@@ -45,7 +43,7 @@ public class DeleteCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(DeleteMeetingCommand.class);
 
         @Option(names = "--meetingId", description = "UUID of the meeting to delete", required = true)
-        private UUID meetingId;
+        private String meetingId;
 
         @Override
         public void run() {
@@ -66,7 +64,7 @@ public class DeleteCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(DeleteCalendarCommand.class);
 
         @Option(names = "--calendarId", description = "UUID of the calendar to delete", required = true)
-        private UUID calendarId;
+        private String calendarId;
 
         @Override
         public void run() {
@@ -87,7 +85,7 @@ public class DeleteCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(DeleteParticipantCommand.class);
 
         @Option(names = "--participantId", description = "UUID of the participant to delete", required = true)
-        private UUID participantId;
+        private String participantId;
 
         @Override
         public void run() {
@@ -108,7 +106,7 @@ public class DeleteCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(DeleteAttachmentCommand.class);
 
         @Option(names = "--attachmentId", description = "UUID of the attachment to delete", required = true)
-        private UUID attachmentId;
+        private String attachmentId;
 
         @Override
         public void run() {

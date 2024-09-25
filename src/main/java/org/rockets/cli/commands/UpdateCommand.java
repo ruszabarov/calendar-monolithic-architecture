@@ -12,8 +12,6 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
-import java.util.UUID;
-
 @Command(
         name = "update",
         description = "Updates records based on ID",
@@ -57,22 +55,22 @@ public class UpdateCommand implements Runnable {
         private String details;
 
         @Option(names = "--add-calendarId", description = "Add a Calendar ID to the meeting")
-        private UUID addCalendarId;
+        private String addCalendarId;
 
         @Option(names = "--remove-calendarId", description = "Remove a Calendar ID from the meeting")
-        private UUID removeCalendarId;
+        private String removeCalendarId;
 
         @Option(names = "--add-participantId", description = "Add a Participant ID to the meeting")
-        private UUID addParticipantId;
+        private String addParticipantId;
 
         @Option(names = "--remove-participantId", description = "Remove a Participant ID from the meeting")
-        private UUID removeParticipantId;
+        private String removeParticipantId;
 
         @Option(names = "--add-attachmentId", description = "Add an Attachment ID to the meeting")
-        private UUID addAttachmentId;
+        private String addAttachmentId;
 
         @Option(names = "--remove-attachmentId", description = "Remove an Attachment ID from the meeting")
-        private UUID removeAttachmentId;
+        private String removeAttachmentId;
 
         @Override
         public void run() {
@@ -149,7 +147,7 @@ public class UpdateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(UpdateCalendarCommand.class);
 
         @Option(names = "--id", description = "Calendar ID", required = true)
-        private UUID id;
+        private String id;
 
         @Option(names = "--title", description = "New calendar title")
         private String title;
@@ -158,10 +156,10 @@ public class UpdateCommand implements Runnable {
         private String details;
 
         @Option(names = "--add-meetingId", description = "Add a Meeting ID to the calendar")
-        private UUID addMeetingId;
+        private String addMeetingId;
 
         @Option(names = "--remove-meetingId", description = "Remove a Meeting ID from the calendar")
-        private UUID removeMeetingId;
+        private String removeMeetingId;
 
         @Override
         public void run() {

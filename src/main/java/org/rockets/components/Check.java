@@ -1,21 +1,15 @@
 package org.rockets.components;
 
-import java.util.UUID;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class Check {
-
-    // UUID:
-    // Validates UUID and generates one if nothing is provided
-    public static UUID generate(UUID providedUUID) {
-        return (providedUUID == null) ? UUID.randomUUID() : providedUUID;
-    }
 
     // Validates if a list is empty or not of a generic type
     public static <T> boolean validateList(List<T> list) {

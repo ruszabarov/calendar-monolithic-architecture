@@ -1,24 +1,23 @@
 package org.rockets.components;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class Participant {
-    private final UUID participantId;
+    private final String participantId;
     private String name;
     private String email;
 
-    public Participant(UUID participantId) {
+    public Participant(String participantId) {
         this.participantId = participantId;
     }
 
-    public Participant(UUID participantId, String name, String email) {
+    public Participant(String participantId, String name, String email) {
         this(participantId);
         this.name = name;
         this.email = email;
     }
 
-    public UUID getParticipantId() {
+    public String getParticipantId() {
         return participantId;
     }
 

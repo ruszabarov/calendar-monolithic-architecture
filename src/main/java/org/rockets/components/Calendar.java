@@ -3,25 +3,24 @@ package org.rockets.components;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Calendar {
-    private final UUID calendarId;
+    private final String calendarId;
     private String title;
     private String details;
     private List<Meeting> meetings = new ArrayList<>();
 
-    public Calendar(UUID calendarId) {
+    public Calendar(String calendarId) {
         this.calendarId = calendarId;
     }
 
-    public Calendar(UUID calendarId, String title, String details) {
+    public Calendar(String calendarId, String title, String details) {
         this(calendarId);
         this.title = title;
         this.details = details;
     }
 
-    public UUID getCalendarId() {
+    public String getCalendarId() {
         return calendarId;
     }
 

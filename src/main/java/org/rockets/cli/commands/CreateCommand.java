@@ -43,7 +43,7 @@ public class CreateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(CreateMeetingCommand.class);
 
         @Option(names = "--meetingId", description = "UUID for the meeting (optional)")
-        private UUID meetingId;
+        private String meetingId;
 
         @Option(names = "--title", description = "Title of the meeting (up to 2000 characters)", required = true)
         private String title;
@@ -69,7 +69,7 @@ public class CreateCommand implements Runnable {
         @Override
         public void run() {
             try {
-                if (meetingId == null) meetingId = UUID.fromString(Check.generate(null).toString());
+                if (meetingId == null) meetingId = UUID.randomUUID().toString();
                 title = Check.limitString(title, 2000);
                 if (!Check.validateDateTime(dateTime)) {
                     logger.error("Invalid Date Time: " + dateTime);
@@ -97,7 +97,7 @@ public class CreateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(CreateCalendarCommand.class);
 
         @Option(names = "--calendarId", description = "UUID for the calendar (optional)")
-        private UUID calendarId;
+        private String calendarId;
 
         @Option(names = "--title", description = "Title of the calendar (up to 2000 characters)", required = true)
         private String title;
@@ -112,7 +112,7 @@ public class CreateCommand implements Runnable {
         public void run() {
 
             try {
-                if (calendarId == null) calendarId = UUID.fromString(Check.generate(null).toString());
+                if (calendarId == null) calendarId = UUID.randomUUID().toString();
                 title = Check.limitString(title, 2000);
                 details = Check.limitString(details, 10000);
                 if (meetingIds == null || meetingIds.isEmpty()) {
@@ -137,7 +137,7 @@ public class CreateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(CreateParticipantCommand.class);
 
         @Option(names = "--participantId", description = "UUID for the participant (optional)")
-        private UUID participantId;
+        private String participantId;
 
         @Option(names = "--name", description = "Name of the participant (up to 600 characters)", required = true)
         private String name;
@@ -147,7 +147,7 @@ public class CreateCommand implements Runnable {
 
         @Override
         public void run() {
-            if (participantId == null) participantId = UUID.fromString(Check.generate(null).toString());
+            if (participantId == null) participantId = UUID.randomUUID().toString();
             name = Check.limitString(name, 600);
             if (!Check.isValidEmail(email)) {
                 logger.error("Invalid: " + email);
@@ -171,7 +171,7 @@ public class CreateCommand implements Runnable {
         private Logger logger = LoggerFactory.getLogger(CreateAttachmentCommand.class);
 
         @Option(names = "--attachmentId", description = "UUID for the attachment (optional)")
-        private UUID attachmentId;
+        private String attachmentId;
 
         @Option(names = "--meetingIds", description = "List of meeting IDs associated with the attachment", split = ",")
         private List<String> meetingIds;
@@ -181,7 +181,7 @@ public class CreateCommand implements Runnable {
 
         @Override
         public void run() {
-            if (attachmentId == null) attachmentId = UUID.fromString(Check.generate(null).toString());
+            if (attachmentId == null) attachmentId = UUID.randomUUID().toString();
             if (!Check.isValidURL(url)) {
                 logger.error("Invalid URL: " + url);
                 return;

@@ -5,7 +5,6 @@ import org.rockets.components.Meeting;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class MeetingDAO {
     private final Connection conn;
@@ -18,7 +17,7 @@ public class MeetingDAO {
     public void createMeeting(Meeting meeting) throws SQLException {
         String sql = "INSERT INTO Meetings (MeetingId, Title, DateTime, Location, Details) VALUES (?, ?, ?, ?, ?);";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, meeting.getMeetingId().toString());
+            pstmt.setString(1, meeting.getMeetingId());
             pstmt.setString(2, meeting.getTitle());
             pstmt.setString(3, meeting.getDateTime());
             pstmt.setString(4, meeting.getLocation());
@@ -34,7 +33,7 @@ public class MeetingDAO {
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                Meeting meeting = new Meeting(UUID.fromString(rs.getString("MeetingId")), rs.getString("Title"), rs.getString("DateTime"), rs.getString("Location"), rs.getString("Details"));
+                Meeting meeting = new Meeting(rs.getString("MeetingId"), rs.getString("Title"), rs.getString("DateTime"), rs.getString("Location"), rs.getString("Details"));
                 meetings.add(meeting);
             }
         }
@@ -52,7 +51,7 @@ public class MeetingDAO {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Meeting meeting = new Meeting(UUID.fromString(rs.getString("MeetingId")), rs.getString("Title"), rs.getString("DateTime"), rs.getString("Location"), rs.getString("Details"));
+                    Meeting meeting = new Meeting(rs.getString("MeetingId"), rs.getString("Title"), rs.getString("DateTime"), rs.getString("Location"), rs.getString("Details"));
                     meetings.add(meeting);
                 }
             }
@@ -68,7 +67,7 @@ public class MeetingDAO {
             pstmt.setString(1, meetingId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Meeting(UUID.fromString(rs.getString("MeetingId")), rs.getString("Title"), rs.getString("DateTime"), rs.getString("Location"), rs.getString("Details"));
+                    return new Meeting(rs.getString("MeetingId"), rs.getString("Title"), rs.getString("DateTime"), rs.getString("Location"), rs.getString("Details"));
                 } else {
                     return null;
                 }
@@ -84,7 +83,7 @@ public class MeetingDAO {
             pstmt.setString(2, meeting.getDateTime());
             pstmt.setString(3, meeting.getLocation());
             pstmt.setString(4, meeting.getDetails());
-            pstmt.setString(5, meeting.getMeetingId().toString());
+            pstmt.setString(5, meeting.getMeetingId());
             pstmt.executeUpdate();
         }
     }

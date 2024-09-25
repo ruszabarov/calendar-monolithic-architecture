@@ -7,7 +7,6 @@ import org.rockets.components.Participant;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class AttachmentDAO {
     private final Connection conn;
@@ -24,7 +23,7 @@ public class AttachmentDAO {
 
         String sql = "INSERT INTO Attachments (AttachmentId, URL) VALUES (?, ?);";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, attachment.getAttachmentId().toString());
+            pstmt.setString(1, attachment.getAttachmentId());
             pstmt.setString(2, attachment.getAttachmentUrl());
             pstmt.executeUpdate();
         }
@@ -38,7 +37,7 @@ public class AttachmentDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Attachment attachment = new Attachment(
-                        UUID.fromString(rs.getString("AttachmentId")),
+                        rs.getString("AttachmentId"),
                         rs.getString("URL")
                 );
                 attachments.add(attachment);
@@ -55,7 +54,7 @@ public class AttachmentDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return new Attachment(
-                            UUID.fromString(rs.getString("AttachmentId")),
+                            rs.getString("AttachmentId"),
                             rs.getString("URL")
                     );
                 } else {
@@ -73,7 +72,7 @@ public class AttachmentDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Attachment attachment = new Attachment(
-                            UUID.fromString(rs.getString("AttachmentId")),
+                            rs.getString("AttachmentId"),
                             rs.getString("URL")
                     );
                     attachments.add(attachment);
@@ -94,7 +93,7 @@ public class AttachmentDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Participant participant = new Participant(
-                            UUID.fromString(rs.getString("ParticipantId")),
+                            rs.getString("ParticipantId"),
                             rs.getString("Name"),
                             rs.getString("Email")
                     );
@@ -114,7 +113,7 @@ public class AttachmentDAO {
         String sql = "UPDATE Attachments SET URL = ? WHERE AttachmentId = ?;";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, attachment.getAttachmentUrl());
-            pstmt.setString(2, attachment.getAttachmentId().toString());
+            pstmt.setString(2, attachment.getAttachmentId());
             pstmt.executeUpdate();
         }
     }

@@ -7,7 +7,6 @@ import org.rockets.dbmanager.MeetingDAO;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 public class CalendarController {
     CalendarDAO calendarDAO;
@@ -37,7 +36,7 @@ public class CalendarController {
 
     }
 
-    public Calendar getCalendarById(UUID id) throws SQLException {
+    public Calendar getCalendarById(String id) throws SQLException {
         Calendar calendar = calendarDAO.getCalendarById(id.toString());
 
         if (calendar == null) {

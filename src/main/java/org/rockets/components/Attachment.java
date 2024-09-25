@@ -1,22 +1,21 @@
 package org.rockets.components;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class Attachment {
-    private final UUID attachmentId;
+    private final String attachmentId;
     private String attachmentUrl;
 
-    public Attachment(UUID attachmentId) {
+    public Attachment(String attachmentId) {
         this.attachmentId = attachmentId;
     }
 
-    public Attachment(UUID attachmentId, String attachmentUrl) {
+    public Attachment(String attachmentId, String attachmentUrl) {
         this(attachmentId);
         this.attachmentUrl = attachmentUrl;
     }
 
-    public UUID getAttachmentId() {
+    public String getAttachmentId() {
         return attachmentId;
     }
 
