@@ -232,7 +232,7 @@ public class UpdateCommand implements Runnable {
                 }
                 if (email != null) {
                     if (!Check.isValidEmail(email)) {
-                        logger.error("Invalid URL");
+                        logger.error("Invalid Email");
                         return;
                     }
                     participant.setEmail(email);
